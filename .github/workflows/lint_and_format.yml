@@ -1,0 +1,33 @@
+name: Lint and Format Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. リポジトリをチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Node.js 環境をセットアップ
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "v22.12.0"
+
+      # 3. 依存関係をインストール
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Lint チェック
+      - name: Run ESLint
+        run: npm run lint
+
+      # 5. Prettier フォーマットチェック
+      - name: Run Prettier Check
+        run: npx prettier --check .
