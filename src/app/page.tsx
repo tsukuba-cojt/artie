@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
 
 export default function Home() {
-  return <div className={styles.page}>テキスト</div>;
+  return <div className={styles.page}>テスト</div>;
 }
