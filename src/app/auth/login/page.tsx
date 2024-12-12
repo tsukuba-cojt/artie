@@ -1,11 +1,8 @@
 "use client";
 
 import { signInWithGoogle } from "@/lib/supabase/auth";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter();
-
   return (
     <div
       style={{

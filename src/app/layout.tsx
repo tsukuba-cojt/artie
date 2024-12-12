@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeProvider, CssBaseline } from "@mui/material";
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import { theme } from "./thema";
 
 export default function RootLayout({
@@ -13,7 +13,9 @@ export default function RootLayout({
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          {children}
+          <Box sx={{ height: "100vh", width: "100vw" }} p={2}>
+            {children}
+          </Box>
         </ThemeProvider>
       </body>
     </html>
