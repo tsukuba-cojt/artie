@@ -13,6 +13,7 @@ export async function GET(request: Request) {
 
   const supabase = createClient();
 
+  // console.log(supabase.auth);
   const {
     data: { user: supabaseUser },
     error,
@@ -45,5 +46,5 @@ export async function GET(request: Request) {
   }
 
   console.log("User not found, redirecting to /register");
-  return NextResponse.redirect(`${origin}/register`, { status: 302 });
+  return NextResponse.redirect(`${origin}/auth/register`, { status: 302 });
 }

@@ -26,29 +26,35 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
+  // ユーザー情報を取得
   const {
     data: { user },
     error,
   } = await supabase.auth.getUser();
 
   if (error || !user) {
-    console.log(user);
-    if (!request.nextUrl.pathname.startsWith("/auth/login")) {
+    if (
+      !request.nextUrl.pathname.startsWith("/auth/login") &&
+      !request.nextUrl.pathname.startsWith("/api/")
+    ) {
       return NextResponse.redirect(new URL("/auth/login", request.url));
     }
     return response;
   }
 
-  const { data: userProfile } = await supabase
-    .from("user")
+  const { data: userProfile, error: userProfileError } = await supabase
+    .from("User")
     .select("*")
     .eq("id", user.id)
     .single();
 
+  console.log(userProfile);
+
   if (!userProfile) {
     if (
       !request.nextUrl.pathname.startsWith("/auth/register") &&
-      !request.nextUrl.pathname.startsWith("/auth/login")
+      !request.nextUrl.pathname.startsWith("/auth/login") &&
+      !request.nextUrl.pathname.startsWith("/api/")
     ) {
       return NextResponse.redirect(new URL("/auth/register", request.url));
     }

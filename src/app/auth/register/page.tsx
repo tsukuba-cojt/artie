@@ -6,9 +6,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-import Input from "@mui/material/Input";
 import styled from "@emotion/styled";
 import { Stack } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 const StyledInput = styled("input")({
   display: "block",
@@ -24,6 +24,7 @@ export default function RegisterPage() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -36,26 +37,30 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !file) {
-      setErrorMessage("名前と画像を入力してください。");
+    if (!name) {
+      setErrorMessage("名前を入力してください。");
       return;
     }
 
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("file", file);
 
-    const response = await fetch("/api/register", {
+    if (file) {
+      formData.append("file", file);
+    }
+
+    const response = await fetch("/api/auth/register", {
       method: "POST",
       body: formData,
     });
 
     if (response.ok) {
-      alert("アカウントが作成されました！");
       setErrorMessage("");
+      // middlewareでユーザー情報が登録されてる場合はregisterページに遷移できず、強制的にルートパスに飛ばす処理が書いてあるが、保険として書いておく。
+      router.push("/");
     } else {
       setErrorMessage(
-        "プロフィール情報の更新に失敗しました。時間をおいてやりなおしてください。",
+        "プロフィール情報の登録に失敗しました。時間をおいてやりなおしてください。",
       );
     }
   };
@@ -69,7 +74,7 @@ export default function RegisterPage() {
     >
       <Header title={"アカウント作成"} backPath="/auth/login" />
 
-      <Stack component="form" onSubmit={handleSubmit} flexGrow={1} gap={3}>
+      <Stack flexGrow={1} gap={3}>
         <Box>
           <Typography variant="h6">名前</Typography>
           <StyledInput
@@ -146,9 +151,9 @@ export default function RegisterPage() {
         )}
 
         <Button
-          type="submit"
           fullWidth
           variant="contained"
+          onClick={handleSubmit}
           sx={{
             padding: "10px",
             backgroundColor: "accent.main",
