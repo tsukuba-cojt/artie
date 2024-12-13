@@ -1,10 +1,10 @@
 "use client";
 
-import NavigationBar from "@/feature/base/components/NavigationBar";
 import React from "react";
+import { Box, Typography, Grid } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import NavigationBar from "@/feature/base/components/NavigationBar";
 
-const TestPage: React.FC = () => {
-  return <NavigationBar />;
-};
-
-export default TestPage;
+export default function Home() {
+  return <Box>Test</Box>;
+}

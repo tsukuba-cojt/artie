@@ -3,8 +3,8 @@
 import React, { JSX } from "react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-import { Box, IconButton } from "@mui/material";
-import { theme } from "@/app/thema";
+import { Box, IconButton, Stack, useTheme } from "@mui/material";
+import NavigationBarSVG from "./NavigationBarSVG";
 
 type NavItem = {
   label: string;
@@ -20,13 +20,15 @@ type NavigationBarProps = {
 };
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
+  const theme = useTheme();
+
   const items: NavItem[] = [
     {
       label: "Home",
       icon: <Icon icon="lucide:home" style={{ fontSize: "24px" }} />,
       route: "./home",
       fontFamily: "SF Pro Text",
-      fontWeight: "500",
+      fontWeight: "400",
     },
     {
       label: "Search",
@@ -38,7 +40,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
       fontWeight: "400",
     },
     {
-      label: "Scan",
+      label: " ",
       icon: null, // Special button doesn't use a standard icon
       route: "./scan",
       fontFamily: "Helvetica",
@@ -64,78 +66,114 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
   return (
     <Box
       sx={{
-        position: "fixed", // Fixes the bar at a specific position
-        bottom: 0, // Positions it at the bottom of the page
-        left: 0, // Ensures it spans from the left edge
-        width: "100%", // Makes it span the full width of the page
-        height: "100px",
+        position: "fixed",
+        bottom: "10px",
+        left: 0,
+        width: "393px",
+        height: "113px",
         display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
-        backgroundColor: theme.palette.accent.main,
-        borderRadius: "16px 16px 0 0", // Optional: rounded corners at the top
-        padding: "10px",
-        zIndex: 1000, // Ensures it stays above other content
+        zIndex: 1000,
       }}
     >
-      {items.map((item, index) => (
-        <Box
-          key={index}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Link href={item.route} passHref>
-            {item.isSpecial ? (
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  paddingTop: 14,
-                  paddingBottom: 17,
-                  paddingLeft: 15,
-                  paddingRight: 16,
-                  background: "#F9F6D3",
-                  boxShadow: "0px 4px 12px #853536",
-                  borderRadius: 50,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  display: "inline-flex",
-                }}
-              >
-                <Icon
-                  icon="lucide:home"
-                  style={{
-                    fontSize: "24px",
-                    color: theme.palette.secondary.main,
-                  }}
-                />
-              </div>
-            ) : (
-              <IconButton
-                onClick={() => onItemSelect && onItemSelect(item.label)}
-                sx={{ color: theme.palette.primary.main }}
-              >
-                {item.icon}
-              </IconButton>
-            )}
-          </Link>
+      {/* SVG Background */}
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 0,
+        }}
+      >
+        <NavigationBarSVG width={"100%"} fill={theme.palette.accent.main} />
+      </Box>
+
+      <Stack
+        sx={{
+          height: "75px",
+          width: "393px",
+          allignItems: "center",
+          flexDirection: "row",
+          marginBottom: "-10px",
+          justifyContent: "space-around",
+        }}
+      >
+        {/* Icons and Circles */}
+        {items.map((item, index) => (
           <Box
+            key={index}
             sx={{
-              color: "#F9F6D3",
-              fontSize: "12px",
-              fontFamily: item.fontFamily,
-              fontWeight: item.fontWeight,
-              marginTop: "5px",
+              position: "relative",
+              height: "75px",
+              zIndex: 1, // Ensure icons are on top of the SVG
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            {item.label}
+            <Link href={item.route} passHref>
+              {item.isSpecial ? (
+                <Box
+                  sx={{
+                    position: "relative",
+                    bottom: "50px",
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* Beige Circle */}
+                  <Box
+                    sx={{
+                      width: "56px",
+                      height: "56px",
+                      backgroundColor: "primary.main",
+                      boxShadow: "0px 4px 12px #853536",
+                      borderRadius: "50%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      position: "absolute",
+                      zIndex: 2,
+                    }}
+                  >
+                    <Icon
+                      icon="lets-icons:user-scan"
+                      style={{
+                        fontSize: "24px",
+                        color: theme.palette.secondary.main,
+                      }}
+                    />
+                  </Box>
+                </Box>
+              ) : (
+                <IconButton
+                  onClick={() => onItemSelect && onItemSelect(item.label)}
+                  sx={{ color: theme.palette.primary.main }}
+                >
+                  {item.icon}
+                </IconButton>
+              )}
+            </Link>
+            <Box
+              sx={{
+                color: "primary.main",
+                fontSize: "12px",
+                fontFamily: item.fontFamily,
+                fontWeight: item.fontWeight,
+                marginTop: "5px",
+              }}
+            >
+              {item.label}
+            </Box>
           </Box>
-        </Box>
-      ))}
+        ))}
+      </Stack>
     </Box>
   );
 };

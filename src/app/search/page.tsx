@@ -6,14 +6,5 @@ import { useTheme } from "@mui/material/styles";
 import NavigationBar from "@/feature/base/components/NavigationBar";
 
 export default function Home() {
-  return (
-    <Box
-      sx={{
-        paddingBottom: "100px", // Adjust based on the height of the NavigationBar
-      }}
-    >
-      <div>Search</div>
-      <NavigationBar />
-    </Box>
-  );
+  return <Box>Search</Box>;
 }
