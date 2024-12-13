@@ -9,7 +9,7 @@ export async function updateSession(request: NextRequest) {
     throw new Error("Supabase環境変数が設定されていません");
   }
 
-  let response = NextResponse.next();
+  const response = NextResponse.next();
 
   const supabase = createServerClient(
     NEXT_PUBLIC_SUPABASE_URL,
@@ -32,6 +32,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (error || !user) {
+    console.log(user);
     if (!request.nextUrl.pathname.startsWith("/auth/login")) {
       return NextResponse.redirect(new URL("/auth/login", request.url));
     }

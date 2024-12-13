@@ -1,30 +1,73 @@
 "use client";
 
+import Header from "@/features/base/components/header";
 import { signInWithGoogle } from "@/lib/supabase/auth";
+import Image from "next/image";
+import { Box, Stack, Typography } from "@mui/material";
 
 export default function LoginPage() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#f9f9f9",
-        padding: "20px",
-      }}
+    <Stack
+      height="100%"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
     >
-      <h1>Login</h1>
-      <p>Sign in to access your account</p>
-      <form action={signInWithGoogle}>
-        <button
-          type="submit"
-          className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 text-sm shadow-sm transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      <Header title="ログイン" />
+
+      <Stack
+        flexGrow={1}
+        justifyContent="center"
+        alignItems="center"
+        spacing={3}
+      >
+        <Box
+          sx={{
+            width: "300px",
+            height: "300px",
+            position: "relative",
+          }}
         >
-          Google でログインする
-        </button>
-      </form>
-    </div>
+          <Image
+            src="/images/default_artie.png"
+            alt="artieちゃん"
+            fill
+            style={{
+              objectFit: "contain",
+            }}
+          />
+        </Box>
+
+        {/* テキスト */}
+        <Typography variant="body1" sx={{ textAlign: "center" }}>
+          ログインしてartieちゃんと
+          <br />
+          作品について語り合おう！
+        </Typography>
+
+        {/* Googleログインボタン */}
+        <Box
+          component="button"
+          onClick={signInWithGoogle}
+          sx={{
+            background: "none",
+            border: "none",
+            objectFit: "contain",
+            padding: "0",
+            cursor: "pointer",
+            display: "inline-flex",
+            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+          }}
+        >
+          <Image
+            src="/images/google_login.png"
+            alt="Sign in with Google"
+            width={280}
+            height={67}
+          />
+        </Box>
+      </Stack>
+    </Stack>
   );
 }
