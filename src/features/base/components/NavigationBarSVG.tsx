@@ -6,17 +6,16 @@ type SvgProps = {
 };
 const NavigationBarSVG: React.FC<SvgProps> = ({
   width = 393,
-  height = 113,
+  height = 107,
   fill = "#D74B4E",
 }) => {
   return (
     <svg
       width={width}
       height={height}
-      viewBox="0 0 393 113"
+      viewBox="0 0 393 107"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      style={{ transform: `scale(${width / 393}, ${height / 113})` }}
     >
       <path
         fillRule="evenodd"

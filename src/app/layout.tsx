@@ -2,20 +2,24 @@
 
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "./thema";
-import NavigationBar from "@/feature/base/components/NavigationBar";
+import NavigationBar from "@/features/base/components/NavigationBar";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+
+  const shouldShowNavigationBar = !pathname.startsWith("/auth");
+
   return (
     <html lang="en">
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <NavigationBar />
-          {/* Render the children */}
+          {shouldShowNavigationBar && <NavigationBar />}
           {children}
         </ThemeProvider>
       </body>

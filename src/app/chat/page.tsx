@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Typography, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import NavigationBar from "@/feature/base/components/NavigationBar";
+import { Box } from "@mui/material";
 
 export default function Home() {
   return <Box>Chat</Box>;
