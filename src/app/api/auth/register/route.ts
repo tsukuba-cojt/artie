@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       try {
         const filePath = `avatars/${Date.now()}_${file.name}`;
 
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from("user-avatars")
           .upload(filePath, file, { contentType: file.type });
 
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         }
 
         imageUrl = publicUrlData.publicUrl;
-      } catch (error) {
+      } catch {
         return NextResponse.json(
           { error: "画像アップロード処理中のエラーが発生しました。" },
           { status: 500 },
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ message: "ユーザーが正常に登録されました。" });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "予期しないエラーが発生しました。" },
       { status: 500 },

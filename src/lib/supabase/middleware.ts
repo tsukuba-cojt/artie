@@ -42,7 +42,7 @@ export async function updateSession(request: NextRequest) {
     return response;
   }
 
-  const { data: userProfile, error: userProfileError } = await supabase
+  const { data: userProfile } = await supabase
     .from("User")
     .select("*")
     .eq("id", user.id)
