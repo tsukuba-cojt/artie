@@ -5,8 +5,8 @@ import { Box, Typography } from "@mui/material";
 
 interface SpeechBubbleProps {
   content: string;
-  sender?: boolean; // If true, the message is from the sender
-  bubbleColor?: string; // Custom bubble color
+  sender?: boolean;
+  bubbleColor?: string;
 }
 
 const SpeechBubble: React.FC<SpeechBubbleProps> = ({
@@ -28,10 +28,9 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
           color: sender ? "common.white" : "common.black",
           maxWidth: "60%",
           padding: "8px 12px",
-          borderRadius: sender ? "16px 16px 4px 16px" : "16px 16px 16px 4px", // Adjusts border radius for tail
+          borderRadius: sender ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
           boxShadow: "2px 2px 6px rgba(0, 0, 0, 0.2)",
           position: "relative",
-          fontFamily: "SF Pro Text",
           wordWrap: "break-word",
         }}
       >
