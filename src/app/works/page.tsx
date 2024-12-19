@@ -1,5 +1,5 @@
-// app/page.tsx
 "use client";
+
 import Index from "@/feature/works/components/Index";
 
 export default function Page() {

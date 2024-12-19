@@ -1,27 +1,22 @@
-// components/Header.tsx
-
 import React, { useState } from "react";
 import { Box, Typography, IconButton } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
+import { theme } from "@/app/thema";
 
 const Header: React.FC = () => {
-  // アイコンの状態を管理
   const [icon, setIcon] = useState<string>("stash:heart");
 
-  // useRouterフックを使ってrouterオブジェクトを取得
   const router = useRouter();
 
-  // アイコンを切り替える関数
   const toggleIcon = () => {
     setIcon((prevIcon) =>
       prevIcon === "stash:heart" ? "stash:heart-solid" : "stash:heart"
     );
   };
 
-  // 前のページに戻る関数
   const goBack = () => {
-    router.back(); // Next.jsの`router.back()`で前のページに戻る
+    router.back();
   };
 
   return (
@@ -39,16 +34,15 @@ const Header: React.FC = () => {
       <IconButton onClick={goBack}>
         <Icon
           icon="stash:angle-left-light"
-          style={{ fontSize: "48px", color: "#ffffff" }}
+          style={{ fontSize: "48px", color: theme.palette.text.secondary }}
         />
       </IconButton>
 
       {/* 中央テキスト */}
       <Typography
+        variant="body2"
+        color="text.secondary"
         sx={{
-          color: "#ffffff",
-          fontSize: 24,
-          fontFamily: "Zen Kaku Gothic Antique, sans-serif",
           fontWeight: 400,
         }}
       >
@@ -57,7 +51,16 @@ const Header: React.FC = () => {
 
       {/* 右アイコン */}
       <IconButton onClick={toggleIcon}>
-        <Icon icon={icon} style={{ fontSize: "48px", color: "#ffffff" }} />
+        <Icon
+          icon={icon}
+          style={{
+            fontSize: "48px",
+            color:
+              icon === "stash:heart"
+                ? theme.palette.text.secondary
+                : theme.palette.accent.main,
+          }}
+        />
       </IconButton>
     </Box>
   );
