@@ -1,12 +1,12 @@
 "use client";
 
-import Index from "@/feature/works/components/Index";
+import Header from "@/feature/works/components/Header";
 import SlidingTabs from "@/features/works/components/SlideBar";
 
 export default function Page() {
   return (
     <main>
-      <Index />
+      <Header />
       <SlidingTabs />
       <div
         style={{
