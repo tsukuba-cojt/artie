@@ -72,6 +72,7 @@ export default function Home() {
                 Main: {color.palette.main}
               </Typography>
             </Box>
+            <Box color="primary.main">てすと</Box>
           </Grid>
         ))}
       </Grid>

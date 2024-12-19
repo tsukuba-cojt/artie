@@ -20,7 +20,7 @@ export const theme = createTheme({
       disabled: "#bdbdbd",
     },
     common: {
-      black: "#000000",
+      black: "#333",
       white: "#ffffff",
     },
     background: {
