@@ -11,7 +11,7 @@ const Header: React.FC = () => {
 
   const toggleIcon = () => {
     setIcon((prevIcon) =>
-      prevIcon === "stash:heart" ? "stash:heart-solid" : "stash:heart"
+      prevIcon === "stash:heart" ? "stash:heart-solid" : "stash:heart",
     );
   };
 
