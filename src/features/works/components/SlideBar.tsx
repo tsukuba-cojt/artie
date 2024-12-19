@@ -1,7 +1,8 @@
-"use client"; // Ensures the component is client-side for Next.js 13+
+"use client";
+
 import { useTheme } from "@mui/material";
-import { SetStateAction, useState } from "react";
-import { Tabs, Tab, Box, Typography } from "@mui/material";
+import { useState } from "react";
+import { Tabs, Tab, Box } from "@mui/material";
 import BasicTab from "@/features/works/components/BasicTab";
 import ArtistTab from "./ArtistTab";
 import TipsTab from "./TipsTab";
@@ -12,48 +13,72 @@ const SlidingTabs = () => {
 
   const [activeTab, setActiveTab] = useState(0);
 
-  const handleTabChange = (event: any, newValue: SetStateAction<number>) => {
+  const handleTabChange = (
+    _event: React.SyntheticEvent,
+    newValue: number,
+  ): void => {
     setActiveTab(newValue);
   };
 
-  const tabs = ["基本情報", "作者について", "豆知識", "ディスカッション"];
-  const content = [<BasicTab />, <ArtistTab />, <TipsTab />, <DiscussionTab />];
-
+  const tabs = [
+    { label: "基本情報", component: <BasicTab /> },
+    { label: "作者について", component: <ArtistTab /> },
+    { label: "豆知識", component: <TipsTab /> },
+    { label: "ディスカッション", component: <DiscussionTab /> },
+  ];
   return (
-    <Box sx={{ width: "100%", overflowX: "hidden" }}>
+    <Box
+      sx={{
+        position: "relative",
+        width: "100vw",
+        left: "50%",
+        transform: "translateX(-50%)",
+        overflowX: "hidden",
+      }}
+    >
       {/* Tabs */}
       <Tabs
         value={activeTab}
         onChange={handleTabChange}
-        variant="scrollable" /* Enables horizontal scrolling */
-        scrollButtons="auto" /* Show scroll buttons if necessary */
+        variant="scrollable"
+        scrollButtons="auto"
         textColor="inherit"
         TabIndicatorProps={{
           style: {
-            backgroundColor: theme.palette.accent.main, // Red sliding bar
+            backgroundColor: theme.palette.accent.main,
             height: "3px",
           },
         }}
         sx={{
           "& .MuiTabs-scroller": {
-            overflowX: "auto", // Enables scrolling outside the screen width
+            overflowX: "auto",
           },
           "& .MuiTab-root": {
-            whiteSpace: "nowrap", // Prevent tabs from breaking into a new line
+            whiteSpace: "nowrap",
             fontWeight: "bold",
-            color: "#bbb",
-            "&.Mui-selected": { color: "#333" },
+            color: "grey.700",
+            "&.Mui-selected": { color: "common.black" },
           },
         }}
       >
-        {tabs.map((label, index) => (
-          <Tab key={index} label={label} />
+        {tabs.map((tab, index) => (
+          <Tab
+            key={index}
+            label={tab.label}
+            id={`tab-${index}`}
+            aria-controls={`tabpanel-${index}`}
+          />
         ))}
       </Tabs>
 
       {/* Tab Content */}
-      <Box sx={{ padding: "20px", textAlign: "center", color: "#333" }}>
-        <Typography>{content[activeTab]}</Typography>
+      <Box
+        id={`tabpanel-${activeTab}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${activeTab}`}
+        sx={{ padding: "20px", textAlign: "center", color: "#333" }}
+      >
+        {tabs[activeTab].component}
       </Box>
     </Box>
   );
