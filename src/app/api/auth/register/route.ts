@@ -27,7 +27,7 @@ export async function POST(request: Request) {
         if (uploadError) {
           return NextResponse.json(
             { error: "画像のアップロードに失敗しました。" },
-            { status: 500 },
+            { status: 500 }
           );
         }
 
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
         if (!publicUrlData?.publicUrl) {
           return NextResponse.json(
             { error: "画像の公開URLの取得に失敗しました。" },
-            { status: 500 },
+            { status: 500 }
           );
         }
 
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       } catch {
         return NextResponse.json(
           { error: "画像アップロード処理中のエラーが発生しました。" },
-          { status: 500 },
+          { status: 500 }
         );
       }
     }
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     if (userError || !userData.user) {
       return NextResponse.json(
         { error: "ユーザー情報の取得に失敗しました。" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     if (dbError) {
       return NextResponse.json(
         { error: "ユーザー登録に失敗しました。" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json(
       { error: "予期しないエラーが発生しました。" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
