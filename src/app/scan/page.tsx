@@ -26,7 +26,7 @@ export default function Scan() {
         }
       } catch {
         setStatusMessage(
-          "カメラの使用許可がありません。設定からカメラへのアクセスを許可してください。"
+          "カメラの使用許可がありません。設定からカメラへのアクセスを許可してください。",
         );
       }
     };
@@ -45,7 +45,7 @@ export default function Scan() {
     try {
       if (!videoRef.current) {
         setStatusMessage(
-          "予期せぬエラーが発生しました。再度時間をおいてお試しください。"
+          "予期せぬエラーが発生しました。再度時間をおいてお試しください。",
         );
         return;
       }
@@ -60,7 +60,7 @@ export default function Scan() {
 
       if (!ctx) {
         setStatusMessage(
-          "予期せぬエラーが発生しました。再度時間をおいてお試しください。"
+          "予期せぬエラーが発生しました。再度時間をおいてお試しください。",
         );
         return;
       }
@@ -89,7 +89,7 @@ export default function Scan() {
       setTimeout(() => setStatusMessage(""), 5000);
     } catch {
       setStatusMessage(
-        "予期せぬエラーが発生しました。再度時間をおいてお試しください。"
+        "予期せぬエラーが発生しました。再度時間をおいてお試しください。",
       );
 
       setTimeout(() => setStatusMessage(""), 5000);
