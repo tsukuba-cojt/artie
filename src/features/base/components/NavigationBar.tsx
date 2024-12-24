@@ -71,6 +71,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
         justifyContent: "center",
         bottom: "5px",
         position: "fixed",
+        zIndex: 1000,
       }}
     >
       <Box
