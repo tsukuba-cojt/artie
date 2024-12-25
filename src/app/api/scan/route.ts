@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     if (!imageBase64) {
       return NextResponse.json(
         { error: "画像データが提供されていません。" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     if (!response.ok) {
       return NextResponse.json(
         { error: "予測リクエストが失敗しました。" },
-        { status: response.status },
+        { status: response.status }
       );
     }
 
@@ -47,12 +47,12 @@ export async function POST(req: Request) {
     if (!predictions || !predictions.confidences || !predictions.ids) {
       return NextResponse.json(
         { error: "作品を認識できませんでした。再度近づいて撮影してください。" },
-        { status: 200 },
+        { status: 200 }
       );
     }
 
     const maxConfidenceIndex = predictions.confidences.indexOf(
-      Math.max(...predictions.confidences),
+      Math.max(...predictions.confidences)
     );
 
     const maxConfidence = predictions.confidences[maxConfidenceIndex];
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
     if (maxConfidence < 0.8) {
       return NextResponse.json(
         { error: "作品を認識できませんでした。再度近づいて撮影してください。" },
-        { status: 200 },
+        { status: 200 }
       );
     }
 
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
       {
         error: "予期せぬエラーが発生しました。再度時間をおいて試してください。",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
