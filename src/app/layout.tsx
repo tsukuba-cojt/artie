@@ -20,9 +20,7 @@ export default function RootLayout({
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {shouldShowNavigationBar && <NavigationBar />}
-          <Box sx={{ height: "100vh", width: "100vw" }} p={2}>
-            {children}
-          </Box>
+          <Box sx={{ height: "100vh", width: "100vw" }}>{children}</Box>
         </ThemeProvider>
       </body>
     </html>
