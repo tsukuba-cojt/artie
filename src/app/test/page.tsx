@@ -8,8 +8,8 @@ export default function Home() {
   return (
     <Box>
       <SpeechBubble
-        content="モナリザって誰が書いたのOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO？"
-        sender={false}
+        content="モナリザって誰が書OOOOOOOOOOOOOdsbajdksnalkdskklOOOO？"
+        sender={true}
       />
       <SpeechBubble content="レオナルドダヴィンチだよ！" sender={true} />
     </Box>
