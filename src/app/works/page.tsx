@@ -1,12 +1,17 @@
 "use client";
 
-import Header from "@/feature/works/components/Header";
+import AboutWorks from "@/features/works/components/AboutWorks";
+import Header from "@/features/works/components/Header";
 import SlidingTabs from "@/features/works/components/SlideBar";
+import { Box } from "@mui/material";
 
 export default function Page() {
   return (
     <main>
-      <Header />
+      <Box sx={{ position: "relative" }}>
+        <Header />
+        <AboutWorks />
+      </Box>
       <SlidingTabs />
       <div
         style={{
