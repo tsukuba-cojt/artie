@@ -11,7 +11,7 @@ const Header: React.FC = () => {
 
   const toggleIcon = () => {
     setIcon((prevIcon) =>
-      prevIcon === "stash:heart" ? "stash:heart-solid" : "stash:heart",
+      prevIcon === "stash:heart" ? "stash:heart-solid" : "stash:heart"
     );
   };
 
@@ -25,9 +25,11 @@ const Header: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        position: "absolute",
+        top: "10px",
         gap: 7,
         width: "100%",
-        height: "100%",
+        zIndex: 1000,
       }}
     >
       {/* 左アイコン：前のページに戻る */}
