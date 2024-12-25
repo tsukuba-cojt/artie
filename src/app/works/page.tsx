@@ -1,7 +1,7 @@
 "use client";
 
-import Header from "@/feature/works/components/Header";
-import AboutWorks from "@/features/base/works/components/AboutWorks";
+import AboutWorks from "@/features/works/components/AboutWorks";
+import Header from "@/features/works/components/Header";
 import SlidingTabs from "@/features/works/components/SlideBar";
 import { Box } from "@mui/material";
 
