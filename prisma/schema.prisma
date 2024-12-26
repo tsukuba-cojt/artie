@@ -37,6 +37,7 @@ model Work {
   id        String   @id
   title     String
   description String
+  imageUrl    String?
   author    Author   @relation(fields: [authorId], references: [id])
   authorId  String   @db.Uuid
   createdAt DateTime @default(now())

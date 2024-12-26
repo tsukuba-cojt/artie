@@ -88,12 +88,16 @@ const works = [
     title: "View of Delft",
     description: "A cityscape painting of Delft by Johannes Vermeer.",
     authorId: authors[0].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/3465022109372121088.jpg",
   },
   {
     id: "7447330079874482176",
     title: "The Entombment of Christ",
     description: "A dramatic depiction of Christ's entombment by Caravaggio.",
     authorId: authors[1].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/7447330079874482176.jpg",
   },
   {
     id: "8843445964359335936",
@@ -101,54 +105,72 @@ const works = [
     description:
       "A detailed depiction of the Tower of Babel by Pieter Bruegel.",
     authorId: authors[2].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/8843445964359335936.jpg",
   },
   {
     id: "9183925133062963200",
     title: "Mona Lisa",
     description: "A world-famous portrait by Leonardo da Vinci.",
     authorId: authors[3].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/9183925133062963200.jpg",
   },
   {
     id: "7095943755823316992",
     title: "The Birth of Venus",
     description: "A mythological painting by Sandro Botticelli.",
     authorId: authors[4].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/7095943755823316992.jpg",
   },
   {
     id: "3820700926818123776",
     title: "Arnolfini Portrait",
     description: "A detailed portrait by Jan van Eyck.",
     authorId: authors[5].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/3820700926818123776.jpg",
   },
   {
     id: "6782380631767646208",
     title: "Venus and Adonis",
     description: "A romantic mythological painting by Titian.",
     authorId: authors[6].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/6782380631767646208.jpg",
   },
   {
     id: "8453216093522100224",
     title: "Olympia",
     description: "A provocative painting by Édouard Manet.",
     authorId: authors[7].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/8453216093522100224.jpg",
   },
   {
     id: "8356951651487055872",
     title: "The School of Athens",
     description: "A monumental fresco by Raphael.",
     authorId: authors[8].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/8356951651487055872.jpg",
   },
   {
     id: "8903576056259149824",
     title: "A Sunday Afternoon on the Island of La Grande Jatte",
     description: "A famous pointillist painting by Georges Seurat.",
     authorId: authors[9].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/8903576056259149824.jpg",
   },
   {
     id: "3006675294170906624",
     title: "Samson and Delilah",
     description: "A dramatic depiction by Peter Paul Rubens.",
     authorId: authors[10].id,
+    imageUrl:
+      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/3006675294170906624.jpg",
   },
 ];
 
@@ -173,12 +195,18 @@ async function seed() {
     for (const work of works) {
       await prisma.work.upsert({
         where: { id: work.id },
-        update: {},
+        update: {
+          title: work.title,
+          description: work.description,
+          authorId: work.authorId,
+          imageUrl: work.imageUrl,
+        },
         create: {
           id: work.id,
           title: work.title,
           description: work.description,
           authorId: work.authorId,
+          imageUrl: work.imageUrl,
         },
       });
     }
