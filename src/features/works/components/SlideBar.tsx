@@ -15,7 +15,7 @@ const SlidingTabs = () => {
 
   const handleTabChange = (
     _event: React.SyntheticEvent,
-    newValue: number
+    newValue: number,
   ): void => {
     setActiveTab(newValue);
   };
