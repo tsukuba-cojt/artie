@@ -1,4 +1,3 @@
-import { theme } from "@/app/thema";
 import { Box, Button, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
@@ -19,7 +18,7 @@ export const CollapsibleText: React.FC<CollapsibleTextProps> = ({
   useEffect(() => {
     if (textRef.current) {
       const lineHeight = parseFloat(
-        window.getComputedStyle(textRef.current).lineHeight,
+        window.getComputedStyle(textRef.current).lineHeight
       );
       const maxHeight = lineHeight * maxLines;
       const actualHeight = textRef.current.scrollHeight;
