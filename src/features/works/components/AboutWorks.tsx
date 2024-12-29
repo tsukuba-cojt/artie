@@ -1,15 +1,26 @@
 import { Box, Stack, Typography } from "@mui/material";
 
-export default function AboutWorks() {
+interface HeaderProps {
+  imageUrl: string;
+  title: string;
+  author: string;
+}
+
+export const AboutWorks: React.FC<HeaderProps> = ({
+  imageUrl,
+  title,
+  author,
+}) => {
   return (
     <Stack direction={"column"}>
       <Box
         component="img"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Leonardo_da_Vinci_-_Mona_Lisa.jpg/300px-Leonardo_da_Vinci_-_Mona_Lisa.jpg"
+        src={imageUrl ?? null}
         sx={{
           position: "relative",
           width: "100vw",
           height: "auto",
+          minHeight: "100px",
           overflow: "hidden",
         }}
       />
@@ -19,9 +30,9 @@ export default function AboutWorks() {
         p={2}
         sx={{ width: "100vw", justifyContent: "center", alignItems: "center" }}
       >
-        <Typography variant="h5">モナリザ</Typography>
-        <Typography variant="body2">レオナルド・ダ・ヴィンチ</Typography>
+        <Typography variant="h5">{title}</Typography>
+        <Typography variant="body2">{author}</Typography>
       </Stack>
     </Stack>
   );
-}
+};
