@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Box,
   Stack,
@@ -24,7 +24,7 @@ export default function ArtistTab() {
     keywords: [] as string[],
   });
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchAuthor = useCallback(async () => {
     setLoading(true);
