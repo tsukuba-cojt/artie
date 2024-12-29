@@ -1,11 +1,8 @@
 "use client";
 
 import React from "react";
-
 import Typography from "@mui/material/Typography";
-
 import { useRouter } from "next/navigation";
-
 import { Box, Button, Stack } from "@mui/material";
 
 interface ArtBoxProps {
@@ -25,8 +22,8 @@ const ArtBox: React.FC<ArtBoxProps> = ({ imageUrl, title, workId }) => {
     <Box
       sx={{
         position: "relative",
-        minHeight: "100px",
         borderRadius: "16px",
+        width: "100%",
         overflow: "hidden",
       }}
     >
@@ -35,6 +32,7 @@ const ArtBox: React.FC<ArtBoxProps> = ({ imageUrl, title, workId }) => {
         src={imageUrl ?? ""}
         alt={title}
         sx={{
+          display: "block",
           width: "100%",
           height: "auto",
         }}
@@ -47,11 +45,11 @@ const ArtBox: React.FC<ArtBoxProps> = ({ imageUrl, title, workId }) => {
         sx={{
           position: "absolute",
           bottom: 0,
-          padding: "20px",
+          padding: "24px",
           width: "100%",
         }}
       >
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        <Typography variant="body1" sx={{ color: "text.secondary" }}>
           {title}
         </Typography>
         <Button
