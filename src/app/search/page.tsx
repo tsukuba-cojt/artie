@@ -47,8 +47,8 @@ export default function SearchPage() {
 
       const results: SearchResult[] = await response.json();
       setSearchResults(results);
-    } catch (err: any) {
-      setError(err.message || "予期しないエラーが発生しました。");
+    } catch {
+      setError("予期しないエラーが発生しました。");
     } finally {
       setSearching(false);
     }
