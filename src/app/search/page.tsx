@@ -28,7 +28,7 @@ export default function SearchPage() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const { history, addHistory } = useSearchHistory();
+  const { history } = useSearchHistory();
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -39,7 +39,7 @@ export default function SearchPage() {
 
     try {
       const response = await fetch(
-        `/api/search?query=${encodeURIComponent(searchQuery)}`,
+        `/api/search?query=${encodeURIComponent(searchQuery)}`
       );
       if (!response.ok) {
         throw new Error("検索に失敗しました。");
