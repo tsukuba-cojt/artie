@@ -14,9 +14,15 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { theme } from "../thema";
 import Header from "@/features/base/components/header";
 
+interface SearchResult {
+  id: number;
+  title: string;
+  imageUrl: string;
+}
+
 export default function SearchPage() {
   const [searching, setSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
