@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   if (!query) {
     return NextResponse.json(
       { error: "検索クエリが指定されていません。" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
     if (worksError) {
       return NextResponse.json(
         { error: "データベース検索中にエラーが発生しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
     console.error("検索中にエラーが発生しました:", error);
     return NextResponse.json(
       { error: "検索中に予期しないエラーが発生しました。" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
