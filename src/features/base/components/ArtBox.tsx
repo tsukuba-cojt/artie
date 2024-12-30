@@ -4,11 +4,12 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 import { Box, Button, Stack } from "@mui/material";
+import useSearchHistory from "@/features/search/hooks/useSearchHistory";
 
 interface ArtBoxProps {
   imageUrl: string;
   title: string;
-  workId: number;
+  workId: string;
   direction?: "row" | "column";
 }
 
@@ -20,7 +21,11 @@ const ArtBox: React.FC<ArtBoxProps> = ({
 }) => {
   const router = useRouter();
 
+  const { addHistory } = useSearchHistory();
+
   const handleDetail = () => {
+    addHistory({ id: workId, title, imageUrl });
+    console.log(workId);
     router.push(`/works/${workId}`);
   };
 
@@ -38,7 +43,7 @@ const ArtBox: React.FC<ArtBoxProps> = ({
       {/* 画像 */}
       <Box
         component="img"
-        src={imageUrl ?? ""}
+        src={imageUrl ?? null}
         alt={title}
         sx={{
           width: "100%",

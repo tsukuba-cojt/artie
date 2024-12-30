@@ -8,11 +8,14 @@ import {
   Typography,
   CircularProgress,
   IconButton,
+  Button,
 } from "@mui/material";
 import ArtBox from "@/features/base/components/ArtBox";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { theme } from "../thema";
 import Header from "@/features/base/components/header";
+import useSearchHistory from "@/features/search/hooks/useSearchHistory";
+import popularWorks from "@/features/search/datas/popularWorks";
 
 interface SearchResult {
   id: number;
@@ -24,31 +27,31 @@ export default function SearchPage() {
   const [searching, setSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const { history, addHistory } = useSearchHistory();
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!searchQuery.trim()) return;
 
     setSearching(true);
     setSearchResults([]);
+    setError(null);
 
-    setTimeout(() => {
-      const mockData = [
-        {
-          id: 1,
-          title: "モナ・リザ",
-          imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/512px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
-        },
-        {
-          id: 2,
-          title: "彫刻作品",
-          imageUrl:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Laocoon_Pio-Clementino_Inv1059-1064-1067_n01.jpg/512px-Laocoon_Pio-Clementino_Inv1059-1064-1067_n01.jpg",
-        },
-      ];
-      setSearchResults(mockData);
+    try {
+      const response = await fetch(
+        `/api/search?query=${encodeURIComponent(searchQuery)}`
+      );
+      if (!response.ok) {
+        throw new Error("検索に失敗しました。");
+      }
+
+      const results: SearchResult[] = await response.json();
+      setSearchResults(results);
+    } catch (err: any) {
+      setError(err.message || "予期しないエラーが発生しました。");
+    } finally {
       setSearching(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -121,9 +124,6 @@ export default function SearchPage() {
                   whiteSpace: "nowrap",
                   display: "flex",
                   gap: 2,
-                  paddingBottom: 1,
-                  paddingX: 2,
-                  marginLeft: -2,
                   height: "300px",
                   msOverflowStyle: "none",
                   scrollbarWidth: "none",
@@ -132,18 +132,15 @@ export default function SearchPage() {
                   },
                 }}
               >
-                <ArtBox
-                  direction="row"
-                  imageUrl="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/512px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg"
-                  title="モナ・リザ"
-                  workId={1}
-                />
-                <ArtBox
-                  direction="row"
-                  imageUrl="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Laocoon_Pio-Clementino_Inv1059-1064-1067_n01.jpg/512px-Laocoon_Pio-Clementino_Inv1059-1064-1067_n01.jpg"
-                  title="彫刻作品"
-                  workId={2}
-                />
+                {history.map((item) => (
+                  <ArtBox
+                    key={item.id}
+                    direction="row"
+                    imageUrl={item.imageUrl}
+                    title={item.title}
+                    workId={item.id}
+                  />
+                ))}
               </Box>
             </Stack>
 
@@ -165,18 +162,15 @@ export default function SearchPage() {
                   },
                 }}
               >
-                <ArtBox
-                  direction="row"
-                  imageUrl="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Laocoon_Pio-Clementino_Inv1059-1064-1067_n01.jpg/512px-Laocoon_Pio-Clementino_Inv1059-1064-1067_n01.jpg"
-                  title="彫刻作品"
-                  workId={2}
-                />
-                <ArtBox
-                  direction="row"
-                  imageUrl="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/512px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg"
-                  title="モナ・リザ"
-                  workId={1}
-                />
+                {popularWorks.map((item) => (
+                  <ArtBox
+                    key={item.id}
+                    direction="row"
+                    imageUrl={item.imageUrl}
+                    title={item.title}
+                    workId={item.id}
+                  />
+                ))}
               </Box>
             </Stack>
           </Stack>
@@ -191,6 +185,17 @@ export default function SearchPage() {
           >
             <CircularProgress sx={{ color: "accent.main" }} />
           </Box>
+        ) : error ? (
+          <Box display="flex" flexDirection="column" gap={2} p={2}>
+            <Typography sx={{ color: "accent.main" }}>{error}</Typography>
+            <Button
+              variant="outlined"
+              sx={{ color: "accent.main", borderColor: "accent.main" }}
+              onClick={handleSearch}
+            >
+              再試行
+            </Button>
+          </Box>
         ) : searchResults.length > 0 ? (
           <Stack gap={1} direction="column">
             <Typography variant="h6">
@@ -202,7 +207,7 @@ export default function SearchPage() {
                   key={result.id}
                   imageUrl={result.imageUrl}
                   title={result.title}
-                  workId={result.id}
+                  workId={result.id.toString()}
                 />
               ))}
             </Stack>
@@ -212,12 +217,7 @@ export default function SearchPage() {
             <Typography variant="h6">
               <strong>検索結果</strong>
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                color: "text.primary",
-              }}
-            >
+            <Typography variant="body1" sx={{ color: "text.primary" }}>
               検索結果が見つかりませんでした。
             </Typography>
           </Stack>
