@@ -39,7 +39,7 @@ export default function SearchPage() {
 
     try {
       const response = await fetch(
-        `/api/search?query=${encodeURIComponent(searchQuery)}`
+        `/api/search?query=${encodeURIComponent(searchQuery)}`,
       );
       if (!response.ok) {
         throw new Error("検索に失敗しました。");
