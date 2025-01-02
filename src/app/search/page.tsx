@@ -11,7 +11,7 @@ import {
   Button,
 } from "@mui/material";
 import ArtBox from "@/features/base/components/ArtBox";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@iconify/react";
 import { theme } from "../thema";
 import Header from "@/features/base/components/header";
 import useSearchHistory from "@/features/search/hooks/useSearchHistory";
@@ -39,7 +39,7 @@ export default function SearchPage() {
 
     try {
       const response = await fetch(
-        `/api/search?query=${encodeURIComponent(searchQuery)}`,
+        `/api/search?query=${encodeURIComponent(searchQuery)}`
       );
       if (!response.ok) {
         throw new Error("検索に失敗しました。");
