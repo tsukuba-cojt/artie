@@ -1,23 +1,93 @@
 "use client";
 
+import { AboutWorks } from "@/features/works/components/AboutWorks";
+import Header from "@/features/works/components/Header";
+import SlidingTabs from "@/features/works/components/SlideBar";
+import { Box, Stack, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const WorkPage = () => {
   const { id } = useParams();
+  const [workData, setWorkData] = useState({
+    title: "",
+    author: "",
+    imageUrl: "",
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (id) {
-      // APIを使って作品データを取得
-      const fetchWork = async () => {};
+      const fetchWork = async () => {
+        setLoading(true);
+        try {
+          const res = await fetch(`/api/works?id=${id}`);
+          const data = await res.json();
+
+          if (res.ok) {
+            setWorkData({
+              title: data.data.title,
+              author: data.data.Author.name,
+              imageUrl: data.data.imageUrl || null,
+            });
+            setError(null);
+          } else {
+            setError("作品情報の取得に失敗しました");
+          }
+        } catch {
+          setError("作品情報の取得に失敗しました");
+        } finally {
+          setLoading(false);
+        }
+      };
+
       fetchWork();
     }
   }, [id]);
 
   return (
-    <div>
-      <h1>{id}</h1>
-    </div>
+    <Stack sx={{ height: "100%", width: "100%" }}>
+      <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              width: "100vw",
+            }}
+          >
+            <CircularProgress sx={{ color: "accent.main" }} />
+          </Box>
+        ) : error ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              width: "100vw",
+            }}
+          >
+            <Typography sx={{ color: "accent.main", textAlign: "center" }}>
+              {error}
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            <Header />
+            <AboutWorks
+              imageUrl={workData.imageUrl}
+              title={workData.title}
+              author={workData.author}
+            />
+            <SlidingTabs />
+          </>
+        )}
+      </Box>
+    </Stack>
   );
 };
 
