@@ -33,6 +33,10 @@ export const theme = createTheme({
       dark: "#a01420",
       contrastText: "#ffffff",
     },
+    action: {
+      hover: "#d74b4e3b", // ホバー時の背景色
+      selected: "#d74b4e3b", // 押下時の背景色
+    },
   },
 });
 
