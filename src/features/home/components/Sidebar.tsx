@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import { theme } from "@/app/thema";
+import { signOut } from "@/lib/supabase/auth";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -98,6 +99,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <Button
           variant="contained"
           sx={{ backgroundColor: "accent.main", color: "common.white" }}
+          onClick={signOut}
           fullWidth
         >
           ログアウト
