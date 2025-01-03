@@ -23,8 +23,8 @@ const ProfileCard: React.FC = () => {
         }
         const data: UserProfile = await response.json();
         setProfile(data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch {
+        setError("プロフィールの取得に失敗しました");
       } finally {
         setLoading(false);
       }
