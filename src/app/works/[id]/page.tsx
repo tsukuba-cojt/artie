@@ -1,5 +1,8 @@
 "use client";
 
+import Header from "@/features/base/components/header";
+import SlidingTabs from "@/features/works/components/SlideBar";
+import { Box, Typography } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -32,14 +35,10 @@ const WorkPage = () => {
   }, [id]);
 
   return (
-    <div>
-      <h1>Work ID: {id}</h1>
-      {error ? (
-        <p style={{ color: "red" }}>{error}</p>
-      ) : (
-        <p>Description: {description}</p>
-      )}
-    </div>
+    <main>
+      <Header title={""} />
+      <SlidingTabs />
+    </main>
   );
 };
 
