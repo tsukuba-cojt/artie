@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     // ここに来ることは少ないですが、念のため
     return NextResponse.json(
       { error: "User object not found after sign-in." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
   if (userCheckError) {
     return NextResponse.json(
       { error: userCheckError.message },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

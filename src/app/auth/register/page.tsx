@@ -64,7 +64,7 @@ export default function RegisterPage() {
         router.push("/");
       } else {
         setErrorMessage(
-          "プロフィール情報の登録に失敗しました。時間をおいてやりなおしてください。"
+          "プロフィール情報の登録に失敗しました。時間をおいてやりなおしてください。",
         );
       }
     } catch {

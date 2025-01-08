@@ -34,7 +34,7 @@ export async function getAccessToken(): Promise<{
     !data.session.refresh_token
   ) {
     throw new Error(
-      "アクセストークンまたはリフレッシュトークンが取得できませんでした。"
+      "アクセストークンまたはリフレッシュトークンが取得できませんでした。",
     );
   }
 

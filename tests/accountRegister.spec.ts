@@ -50,7 +50,7 @@ test.describe.serial("アカウント作成ページのテスト", () => {
       "..",
       "public",
       "images",
-      "default_artie.jpg"
+      "default_artie.jpg",
     );
     await registerPage.uploadImage(imagePath);
   });
