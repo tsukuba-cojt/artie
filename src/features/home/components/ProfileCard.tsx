@@ -1,32 +1,101 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import { Box, Stack } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const ProfileCard = () => {
+interface UserProfile {
+  name: string;
+  email: string;
+  imageUrl?: string;
+}
+
+const ProfileCard: React.FC = () => {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch("/api/auth/user");
+        if (!response.ok) {
+          throw new Error("プロフィールの取得に失敗しました");
+        }
+        const data: UserProfile = await response.json();
+        setProfile(data);
+      } catch {
+        setError("プロフィールの取得に失敗しました");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <Stack alignItems={"center"} justifyContent={"center"} width={"100%"}>
+        <CircularProgress sx={{ color: "accent.main" }} />
+      </Stack>
+    );
+  }
+
+  if (error) {
+    return <Typography color="error">エラーが発生しました: {error}</Typography>;
+  }
+
+  if (!profile) {
+    return <Typography>プロフィールが見つかりません</Typography>;
+  }
+
   return (
-    <Stack direction={"row"} justifyContent={"space-between"}>
+    <Stack
+      direction={"row"}
+      justifyContent={"space-between"}
+      alignItems={"center"}
+    >
       <Stack direction={"column"} gap={0}>
         <Typography variant="h5">
-          <strong>筑波 太郎</strong>
+          <strong>{profile.name}</strong>
         </Typography>
         <Typography variant="body2" color="grey.500">
-          <strong>s2210573@u.tsukuba.ac.jp</strong>
+          <strong>{profile.email}</strong>
         </Typography>
       </Stack>
       <Box
-        component="img"
-        src={
-          "https://d2v5egomggext2.cloudfront.net/irohani.art/wp-content/uploads/2023/11/20111033/%E3%83%A2%E3%83%8A%E3%83%BB%E3%83%AA%E3%82%B60-768x1161.jpg"
-        }
         sx={{
           position: "relative",
           height: "60px",
           width: "60px",
-          objectFit: "cover",
           borderRadius: "50%",
           overflow: "hidden",
+          backgroundColor: profile.imageUrl ? "transparent" : "grey.300",
+          border: profile.imageUrl ? "none" : "2px solid grey",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-      />
+      >
+        {profile.imageUrl ? (
+          <Box
+            component="img"
+            src={profile.imageUrl}
+            alt="Profile Image"
+            sx={{
+              position: "absolute",
+              height: "100%",
+              width: "100%",
+              objectFit: "cover",
+            }}
+          />
+        ) : (
+          // プレースホルダーの内容
+          <Typography variant="body2" color="grey.500">
+            No Img
+          </Typography>
+        )}
+      </Box>
     </Stack>
   );
 };
