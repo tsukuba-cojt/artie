@@ -2,31 +2,19 @@
 
 import React from "react";
 import { Box } from "@mui/material";
-import DateBadge from "@/features/chat/components/Date";
-import SpeechBubble from "@/features/base/components/SpeechBubble";
+import ChatInput from "@/features/chat/components/Input";
 
 export default function Home() {
   return (
     <Box
       sx={{
-        padding: 3, // Add padding around the page
+        padding: 3,
         display: "flex",
-        flexDirection: "column", // Arrange children in a vertical stack
-        gap: 2, // Add spacing between components
+        flexDirection: "column",
+        gap: 2,
       }}
     >
-      <DateBadge date={"11/10(日)"} />
-      <SpeechBubble
-        content={
-          "モナリザね～！知ってる？モナリザは○○△△××なんだよー✨君もモナリザに興味ある？どんなことでも気軽に聞いてね！"
-        }
-        sender={false}
-      />
-
-      {/* Speech Bubble for receiver */}
-      <SpeechBubble content={"モナリザって誰が書いたの？"} sender={true} />
-
-      {/* Date Badge */}
+      <ChatInput />
     </Box>
   );
 }
