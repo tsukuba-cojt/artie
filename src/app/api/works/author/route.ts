@@ -10,14 +10,24 @@ export async function GET(req: NextRequest) {
   if (!id) {
     return NextResponse.json(
       { error: "Missing or invalid id parameter" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   try {
     const { data, error } = await supabase
       .from("Work")
-      .select("description")
+      .select(
+        `
+    Author (
+      name,
+      description,
+      era,
+      birthplace,
+      keywords
+    )
+  `,
+      )
       .eq("id", id)
       .single();
 
@@ -26,15 +36,15 @@ export async function GET(req: NextRequest) {
     if (error || !data) {
       return NextResponse.json(
         { error: "Work not found or error fetching description" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
-    return NextResponse.json({ description: data.description });
+    return NextResponse.json({ data: data });
   } catch {
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
