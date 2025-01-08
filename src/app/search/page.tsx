@@ -11,7 +11,7 @@ import {
   Button,
 } from "@mui/material";
 import ArtBox from "@/features/base/components/ArtBox";
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { Icon } from "@iconify/react";
 import { theme } from "../thema";
 import Header from "@/features/base/components/header";
 import useSearchHistory from "@/features/search/hooks/useSearchHistory";
