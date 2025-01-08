@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   if (!id) {
     return NextResponse.json(
       { error: "Missing or invalid id parameter" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     if (error || !data) {
       return NextResponse.json(
         { error: "Work not found or error fetching description" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
   } catch {
     return NextResponse.json(
       { error: "An unexpected error occurred" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
