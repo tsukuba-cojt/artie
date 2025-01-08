@@ -8,10 +8,10 @@ export default function Home() {
   return (
     <Box
       sx={{
-        padding: 3, // Add padding around the page
+        padding: 3,
         display: "flex",
-        flexDirection: "column", // Arrange children in a vertical stack
-        gap: 2, // Add spacing between components
+        flexDirection: "column",
+        gap: 2,
       }}
     >
       <ChatInput />

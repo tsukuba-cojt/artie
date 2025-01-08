@@ -83,7 +83,7 @@ export default function RegisterPage() {
     >
       <Header title={"アカウント作成"} backPath="/auth/login" />
 
-      <Stack flexGrow={1} gap={3}>
+      <Stack flexGrow={1} gap={3} p={2}>
         <Box>
           <Typography variant="h6">名前</Typography>
           <StyledInput
@@ -153,6 +153,7 @@ export default function RegisterPage() {
               marginBottom: "1rem",
               textAlign: "center",
             }}
+            id="errorMessage"
           >
             {errorMessage}
           </Typography>

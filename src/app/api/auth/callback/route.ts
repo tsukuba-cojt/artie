@@ -7,6 +7,8 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
 
+  console.log("これが認証コードです。", code);
+
   if (!code) {
     return NextResponse.redirect(`${origin}/400`, { status: 400 });
   }
