@@ -9,9 +9,15 @@ interface ArtBoxProps {
   imageUrl: string;
   title: string;
   workId: number;
+  direction?: "row" | "column";
 }
 
-const ArtBox: React.FC<ArtBoxProps> = ({ imageUrl, title, workId }) => {
+const ArtBox: React.FC<ArtBoxProps> = ({
+  imageUrl,
+  title,
+  workId,
+  direction = "column",
+}) => {
   const router = useRouter();
 
   const handleDetail = () => {
@@ -23,25 +29,30 @@ const ArtBox: React.FC<ArtBoxProps> = ({ imageUrl, title, workId }) => {
       sx={{
         position: "relative",
         borderRadius: "16px",
-        width: "100%",
+        width: direction === "column" ? "100%" : "auto",
+        height: direction === "column" ? "auto" : "100%",
         overflow: "hidden",
+        flexShrink: 0,
       }}
     >
+      {/* 画像 */}
       <Box
         component="img"
         src={imageUrl ?? ""}
         alt={title}
         sx={{
-          display: "block",
           width: "100%",
-          height: "auto",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
         }}
       />
 
+      {/* タイトルと詳細ボタン */}
       <Stack
-        direction={"row"}
-        justifyContent={"space-between"}
-        alignItems={"center"}
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
         sx={{
           position: "absolute",
           bottom: 0,
