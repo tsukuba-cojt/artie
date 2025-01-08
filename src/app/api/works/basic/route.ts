@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(req: NextRequest) {
   const supabase = createClient();
 
-  // Extract 'id' from query parameters
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
 
@@ -32,7 +31,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ description: data.description });
-  } catch (err) {
+  } catch {
     return NextResponse.json(
       { error: "An unexpected error occurred" },
       { status: 500 },
