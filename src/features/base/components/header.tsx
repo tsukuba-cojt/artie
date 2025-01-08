@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ title, backPath, rightReactNode }) => {
           justifyContent: "space-between",
           alignItems: "center",
           position: "relative",
-          padding: 0,
+          padding: "0 16px",
         }}
       >
         {/* 左端の戻るボタン */}
