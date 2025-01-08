@@ -1,9 +1,15 @@
 "use client";
 
+<<<<<<< HEAD
 import { AboutWorks } from "@/features/works/components/AboutWorks";
 import Header from "@/features/works/components/Header";
 import SlidingTabs from "@/features/works/components/SlideBar";
 import { Box, Stack, Typography, CircularProgress } from "@mui/material";
+=======
+import Header from "@/features/base/components/header";
+import SlidingTabs from "@/features/works/components/SlideBar";
+import { Box, Typography } from "@mui/material";
+>>>>>>> 0e2f5837338edb92547b6ee5d2e6614d1faec959
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -47,6 +53,7 @@ const WorkPage = () => {
   }, [id]);
 
   return (
+<<<<<<< HEAD
     <Stack sx={{ height: "100%", width: "100%" }}>
       <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
         {loading ? (
@@ -88,6 +95,12 @@ const WorkPage = () => {
         )}
       </Box>
     </Stack>
+=======
+    <main>
+      <Header title={""} />
+      <SlidingTabs />
+    </main>
+>>>>>>> 0e2f5837338edb92547b6ee5d2e6614d1faec959
   );
 };
 

@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const { data, error } = await supabase
-      .from("works")
+      .from("Work")
       .select("description")
       .eq("id", id)
       .single();
