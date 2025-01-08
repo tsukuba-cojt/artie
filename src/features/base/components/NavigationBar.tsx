@@ -26,7 +26,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
     {
       label: "Home",
       icon: <Icon icon="lucide:home" style={{ fontSize: "24px" }} />,
-      route: "./home",
+      route: "/home",
       fontFamily: "SF Pro Text",
       fontWeight: "400",
     },
@@ -35,14 +35,14 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
       icon: (
         <Icon icon="icon-park-outline:search" style={{ fontSize: "24px" }} />
       ),
-      route: "./search",
+      route: "/search",
       fontFamily: "Helvetica",
       fontWeight: "400",
     },
     {
       label: " ",
       icon: null,
-      route: "./scan",
+      route: "/scan",
       fontFamily: "Helvetica",
       fontWeight: "400",
       isSpecial: true,
@@ -50,14 +50,14 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
     {
       label: "Chat",
       icon: <Icon icon="wpf:chat" style={{ fontSize: "24px" }} />,
-      route: "./chat",
+      route: "/chat",
       fontFamily: "Helvetica",
       fontWeight: "400",
     },
     {
       label: "Social",
       icon: <Icon icon="iconoir:community" style={{ fontSize: "24px" }} />,
-      route: "./social",
+      route: "/social",
       fontFamily: "SF Pro Text",
       fontWeight: "400",
     },
