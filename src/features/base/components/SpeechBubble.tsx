@@ -4,7 +4,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 
 interface SpeechBubbleProps {
-  content: string;
+  content: string | React.ReactNode;
   sender?: boolean;
   bubbleColor?: string;
 }
