@@ -1,17 +1,36 @@
 "use client";
 
 import React from "react";
-import { Box } from "@mui/material";
-import SpeechBubble from "@/features/base/components/SpeechBubble";
+import { Box, Typography } from "@mui/material";
+import FloatingActionButton from "@/features/works/components/FloatingChat";
 
-export default function Home() {
+const FabTestPage = () => {
+  const testId = "test123"; // Example ID for testing
+
   return (
-    <Box>
-      <SpeechBubble
-        content="モナリザって誰が書OOOOOOOOOOOOOdsbajdksnalkdskklOOOO？"
-        sender={true}
-      />
-      <SpeechBubble content="レオナルドダヴィンチだよ！" sender={true} />
+    <Box
+      sx={{
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        position: "relative",
+      }}
+    >
+      <Typography variant="h4" gutterBottom>
+        Test Floating Action Button
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{ textAlign: "center", marginBottom: "16px" }}
+      >
+        Click the floating button to navigate to the chat page with ID: {testId}
+      </Typography>
+      <FloatingActionButton id={testId} />
     </Box>
   );
-}
+};
+
+export default FabTestPage;
