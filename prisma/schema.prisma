@@ -20,6 +20,7 @@ model User {
   imageUrl  String?                        // 画像URL (任意フィールド)
   createdAt DateTime @default(now())       // 作成日時
   updatedAt DateTime @updatedAt            // 更新日時
+  conversations Conversation[]                 // ユーザーの会話リレーション
 }
 
 model Author {
@@ -43,4 +44,21 @@ model Work {
   authorId  String   @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+ conversations Conversation[]                 // 作品の会話リレーション
+}
+
+model Conversation {
+  id        String   @id @default(uuid()) @db.Uuid // UUID 型
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // ユーザーとの関連
+  userId    String   @db.Uuid
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade) // 作品との関連
+  workId    String  
+  sender    Sender   @default(USER)              // 発話者 (USER または AI)
+  message   String                               // 発話内容
+  createdAt DateTime @default(now())             // 発話日時
+}
+
+enum Sender {
+  USER
+  AI
 }

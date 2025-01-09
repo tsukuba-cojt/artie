@@ -23,7 +23,7 @@ export async function updateSession(request: NextRequest) {
           }
         },
       },
-    },
+    }
   );
 
   // ユーザー情報を取得

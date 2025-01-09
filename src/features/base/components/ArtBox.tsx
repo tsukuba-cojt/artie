@@ -31,6 +31,7 @@ const ArtBox: React.FC<ArtBoxProps> = ({
 
   return (
     <Box
+      className="work-card-item"
       sx={{
         position: "relative",
         borderRadius: "16px",
@@ -65,7 +66,11 @@ const ArtBox: React.FC<ArtBoxProps> = ({
           width: "100%",
         }}
       >
-        <Typography variant="body1" sx={{ color: "text.secondary" }}>
+        <Typography
+          className="title"
+          variant="body1"
+          sx={{ color: "text.secondary" }}
+        >
           {title}
         </Typography>
         <Button
