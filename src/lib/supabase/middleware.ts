@@ -50,5 +50,23 @@ export async function updateSession(request: NextRequest) {
 
   console.log(userProfile);
 
+  if (!userProfile) {
+    if (
+      !request.nextUrl.pathname.startsWith("/auth/register") &&
+      !request.nextUrl.pathname.startsWith("/auth/login") &&
+      !request.nextUrl.pathname.startsWith("/api/")
+    ) {
+      return NextResponse.redirect(new URL("/auth/register", request.url));
+    }
+    return response;
+  }
+
+  if (
+    request.nextUrl.pathname.startsWith("/auth/login") ||
+    request.nextUrl.pathname.startsWith("/auth/register")
+  ) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   return response;
 }

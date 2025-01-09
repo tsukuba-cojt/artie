@@ -4,7 +4,7 @@ import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 
 interface ClickableSpeechBubbleProps {
-  content: string | React.ReactNode;
+  content: string;
   onClick?: () => void; // Callback for button click
 }
 
