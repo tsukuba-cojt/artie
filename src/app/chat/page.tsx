@@ -1,15 +1,9 @@
 "use client";
 
-import SpeechBubble from "@/features/base/components/SpeechBubble";
 import ClickableSpeechBubble from "@/features/chat/components/SuggestionButton";
-import SpeechBubbleButton from "@/features/chat/components/SuggestionButton";
 import React from "react";
 
 const Example = () => {
-  const handleClick = () => {
-    console.log("Speech bubble clicked!");
-  };
-
   return (
     <div
       style={{
