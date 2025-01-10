@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid // UUIDとして自動生成
-  name      String                         // ユーザー名
-  email     String   @unique               // ユニークなメールアドレス
-  imageUrl  String?                        // 画像URL (任意フィールド)
-  createdAt DateTime @default(now())       // 作成日時
-  updatedAt DateTime @updatedAt            // 更新日時
-  conversations Conversation[]                 // ユーザーの会話リレーション
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  email     String   @unique
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  conversations Conversation[]
+  workFavorites WorkFavorite[]
 }
 
 model Author {
@@ -36,29 +37,48 @@ model Author {
 }
 
 model Work {
-  id        String   @id
-  title     String
-  description String
-  imageUrl    String?
-  author    Author   @relation(fields: [authorId], references: [id])
-  authorId  String   @db.Uuid
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- conversations Conversation[]                 // 作品の会話リレーション
+  id              String          @id
+  title           String
+  description     String
+  imageUrl        String?
+  author          Author          @relation(fields: [authorId], references: [id])
+  authorId        String          @db.Uuid
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  conversations    Conversation[]
+  workFavoritedBy WorkFavorite[]
+
+  @@index([authorId])
 }
 
 model Conversation {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // ユーザーとの関連
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @db.Uuid
-  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade) // 作品との関連
-  workId    String  
-  sender    Sender   @default(USER)              // 発話者 (USER または AI)
-  message   String                               // 発話内容
-  createdAt DateTime @default(now())             // 発話日時
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  workId    String
+  sender    Sender   @default(USER)
+  message   String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([workId])
+  @@index([createdAt])
 }
 
 enum Sender {
   USER
   AI
+}
+
+model WorkFavorite {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.Uuid
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  workId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, workId])
+  @@index([workId])
 }
