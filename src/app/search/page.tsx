@@ -39,7 +39,7 @@ export default function SearchPage() {
 
     try {
       const response = await fetch(
-        `/api/search?query=${encodeURIComponent(searchQuery)}`,
+        `/api/search?query=${encodeURIComponent(searchQuery)}`
       );
       if (!response.ok) {
         throw new Error("検索に失敗しました。");
@@ -56,7 +56,7 @@ export default function SearchPage() {
 
   return (
     <Stack flexDirection="column" height="100vh" px={2} gap={2}>
-      <Header title="Search" />
+      <Header title="Search" showBackButton={false} />
 
       <Stack
         direction="row"

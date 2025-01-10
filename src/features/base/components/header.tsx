@@ -12,9 +12,14 @@ import { Box } from "@mui/material";
 interface HeaderProps {
   title: string;
   rightReactNode?: ReactNode;
+  showBackButton?: boolean; // Optional prop to control back button visibility
 }
 
-const Header: React.FC<HeaderProps> = ({ title, rightReactNode }) => {
+const Header: React.FC<HeaderProps> = ({
+  title,
+  rightReactNode,
+  showBackButton = true,
+}) => {
   const router = useRouter();
 
   const handleBack = () => {
@@ -33,41 +38,51 @@ const Header: React.FC<HeaderProps> = ({ title, rightReactNode }) => {
       <Toolbar
         sx={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
-          position: "relative",
           padding: "0 16px",
         }}
       >
-        {/* Back Button */}
-        <IconButton
-          edge="start"
-          onClick={handleBack}
-          sx={{ color: "accent.main", padding: 0 }}
-        >
-          <Icon icon="stash:angle-left-duotone" width="32" height="32" />
-        </IconButton>
-
-        {/* Center Title */}
-        <Typography
-          variant="h6"
+        {/* Left Side */}
+        <Box
           sx={{
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontWeight: "bold",
-            textAlign: "center",
+            width: "48px", // Ensure consistent width
+            display: "flex",
+            justifyContent: "flex-start",
           }}
         >
-          {title}
-        </Typography>
+          {showBackButton && (
+            <IconButton
+              edge="start"
+              onClick={handleBack}
+              sx={{ color: "accent.main", padding: 0 }}
+            >
+              <Icon icon="stash:angle-left-duotone" width="32" height="32" />
+            </IconButton>
+          )}
+        </Box>
 
-        {/* Right Node */}
-        {rightReactNode && (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {rightReactNode}
-          </Box>
-        )}
+        {/* Center Title */}
+        <Box sx={{ flexGrow: 1, textAlign: "center" }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
+
+        {/* Right Side */}
+        <Box
+          sx={{
+            width: "48px", // Match the left side's width
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          {rightReactNode}
+        </Box>
       </Toolbar>
     </AppBar>
   );

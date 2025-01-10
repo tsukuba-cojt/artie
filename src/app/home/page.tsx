@@ -20,6 +20,7 @@ export default function Home() {
       <Stack flexDirection="column" height="100vh" px={2} gap={2}>
         <Header
           title="Home"
+          showBackButton={false}
           rightReactNode={
             <IconButton onClick={toggleSidebar} aria-label="open sidebar">
               <Icon
