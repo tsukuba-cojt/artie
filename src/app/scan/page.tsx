@@ -32,7 +32,7 @@ export default function Scan() {
       } catch (error) {
         console.error("Camera error:", error);
         setStatusMessage(
-          "カメラの使用許可がありません。設定からカメラへのアクセスを許可してください。",
+          "カメラの使用許可がありません。設定からカメラへのアクセスを許可してください。"
         );
       }
     };
@@ -60,7 +60,7 @@ export default function Scan() {
           canvas: canvasRef.current,
         });
         setStatusMessage(
-          "予期せぬエラーが発生しました。再度時間をおいてお試しください。",
+          "予期せぬエラーが発生しました。再度時間をおいてお試しください。"
         );
         setIsRecognizing(false);
         return;
@@ -83,7 +83,7 @@ export default function Scan() {
       if (!ctx) {
         console.error("Canvas context is null");
         setStatusMessage(
-          "予期せぬエラーが発生しました。再度時間をおいてお試しください。",
+          "予期せぬエラーが発生しました。再度時間をおいてお試しください。"
         );
         setIsRecognizing(false);
         return;
@@ -119,7 +119,7 @@ export default function Scan() {
     } catch (error) {
       console.error("Error in handleCaptureAndPredict:", error);
       setStatusMessage(
-        "予期せぬエラーが発生しました。再度時間をおいてお試しください。",
+        "予期せぬエラーが発生しました。再度時間をおいてお試しください。"
       );
       setTimeout(() => setStatusMessage(""), 5000);
     } finally {

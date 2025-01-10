@@ -21,11 +21,11 @@ export function createClient() {
           } catch (error) {
             console.error("Failed to set cookies in Server Component:", error);
             throw new Error(
-              "Failed to set cookies in Server Component. This may indicate an issue with server-side rendering.",
+              "Failed to set cookies in Server Component. This may indicate an issue with server-side rendering."
             );
           }
         },
       },
-    },
+    }
   );
 }
