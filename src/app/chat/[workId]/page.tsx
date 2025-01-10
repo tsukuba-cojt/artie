@@ -87,7 +87,7 @@ export default function Chat() {
       gap={2}
       sx={{ width: "100vw" }}
     >
-      <Header title="Chat" />
+      <Header title="Chat" showBackButton={true} />
       <Box flexGrow={1} overflow="auto">
         <List>
           {history.map((msg, index) => (
