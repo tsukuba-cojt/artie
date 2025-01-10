@@ -7,6 +7,7 @@ const openai = new OpenAI({
 export type LLMMessage = {
   role: "system" | "user" | "assistant";
   content: string;
+  created_at?: string;
 };
 
 type LLMInput = {
@@ -25,12 +26,15 @@ export const executeLLM = async ({
 
   while (attempt < MAX_RETRIES) {
     try {
+      // 直近50件のメッセージのみを渡すようにする。
+      const recentHistory = history.slice(-50);
+
       const messages: LLMMessage[] = [
         {
           role: "system",
           content: systemMessage,
         },
-        ...history.map(
+        ...recentHistory.map(
           (msg): LLMMessage => ({
             role: msg.role,
             content: msg.content,
