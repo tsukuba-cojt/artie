@@ -1,29 +1,45 @@
 "use client";
 
+import { AboutWorks } from "@/features/works/components/AboutWorks";
+import Header from "@/features/works/components/Header";
+import SlidingTabs from "@/features/works/components/SlideBar";
+import FloatingActionButton from "@/features/works/components/FloatingChat";
+import { Box, Stack, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const WorkPage = () => {
   const { id } = useParams();
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState("");
+  const [workData, setWorkData] = useState({
+    title: "",
+    author: "",
+    imageUrl: "",
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (id) {
-      // Fetch the work data using the API
       const fetchWork = async () => {
+        setLoading(true);
         try {
-          const response = await fetch(`/api/works/basic?id=${id}`);
-          const data = await response.json();
+          const res = await fetch(`/api/works?id=${id}`);
+          const data = await res.json();
 
-          if (!response.ok) {
-            setError(data.error || "An error occurred.");
-            return;
+          if (res.ok) {
+            setWorkData({
+              title: data.data.title,
+              author: data.data.Author.name,
+              imageUrl: data.data.imageUrl || null,
+            });
+            setError(null);
+          } else {
+            setError("作品情報の取得に失敗しました");
           }
-
-          setDescription(data.description || "No description available.");
-        } catch (err) {
-          setError("An unexpected error occurred.");
+        } catch {
+          setError("作品情報の取得に失敗しました");
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -32,14 +48,48 @@ const WorkPage = () => {
   }, [id]);
 
   return (
-    <div>
-      <h1>Work ID: {id}</h1>
-      {error ? (
-        <p style={{ color: "red" }}>{error}</p>
-      ) : (
-        <p>Description: {description}</p>
-      )}
-    </div>
+    <Stack sx={{ height: "100%", width: "100%" }}>
+      <Box sx={{ position: "relative", height: "100%,", width: "100%" }}>
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              width: "100vw",
+            }}
+          >
+            <CircularProgress sx={{ color: "accent.main" }} />
+          </Box>
+        ) : error ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              width: "100vw",
+            }}
+          >
+            <Typography sx={{ color: "accent.main", textAlign: "center" }}>
+              {error}
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            <Header />
+            <AboutWorks
+              imageUrl={workData.imageUrl}
+              title={workData.title}
+              author={workData.author}
+            />
+            <SlidingTabs />
+            <FloatingActionButton id={id} />
+          </>
+        )}
+      </Box>
+    </Stack>
   );
 };
 

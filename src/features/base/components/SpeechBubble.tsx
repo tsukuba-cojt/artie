@@ -12,7 +12,7 @@ interface SpeechBubbleProps {
 const SpeechBubble: React.FC<SpeechBubbleProps> = ({
   content,
   sender = true,
-  bubbleColor = sender ? "accent.main" : "background.paper",
+  bubbleColor = sender ? "background.paper" : "accent.main",
 }) => {
   return (
     <Box
@@ -25,7 +25,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
       <Box
         sx={{
           backgroundColor: bubbleColor,
-          color: sender ? "common.white" : "common.black",
+          color: sender ? "common.black" : "common.white",
           maxWidth: "60%",
           padding: "8px 12px",
           borderRadius: sender ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
