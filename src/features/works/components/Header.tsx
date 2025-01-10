@@ -1,18 +1,73 @@
-import React, { useState } from "react";
-import { Box, Typography, IconButton } from "@mui/material";
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Box, Typography, IconButton, CircularProgress } from "@mui/material";
 import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { theme } from "@/app/thema";
 
 const Header: React.FC = () => {
-  const [icon, setIcon] = useState<string>("stash:heart");
-
   const router = useRouter();
+  const { id } = useParams();
 
-  const toggleIcon = () => {
-    setIcon((prevIcon) =>
-      prevIcon === "stash:heart" ? "stash:heart-solid" : "stash:heart",
-    );
+  const [isFavorited, setIsFavorited] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [toggling, setToggling] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
+  // お気に入り状態を取得する関数
+  const fetchFavoriteStatus = async () => {
+    if (!id) return;
+
+    try {
+      const response = await fetch(`/api/works/${id}/favorite`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsFavorited(data.isFavorited);
+      } else {
+        setError(true);
+      }
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFavoriteStatus();
+  }, [id]);
+
+  // お気に入りの追加・解除を行う関数
+  const toggleFavorite = async () => {
+    if (!id) return;
+
+    setToggling(true);
+
+    try {
+      const response = await fetch(`/api/works/${id}/favorite`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setIsFavorited((prev) => !prev);
+      } else {
+        setError(true);
+      }
+    } catch {
+      setError(true);
+    } finally {
+      setToggling(false);
+    }
   };
 
   const goBack = () => {
@@ -32,7 +87,6 @@ const Header: React.FC = () => {
         zIndex: 1000,
       }}
     >
-      {/* 左アイコン：前のページに戻る */}
       <IconButton onClick={goBack}>
         <Icon
           icon="stash:angle-left-light"
@@ -40,7 +94,6 @@ const Header: React.FC = () => {
         />
       </IconButton>
 
-      {/* 中央テキスト */}
       <Typography
         variant="body2"
         color="text.secondary"
@@ -51,18 +104,26 @@ const Header: React.FC = () => {
         作品について
       </Typography>
 
-      {/* 右アイコン */}
-      <IconButton onClick={toggleIcon}>
-        <Icon
-          icon={icon}
-          style={{
-            fontSize: "48px",
-            color:
-              icon === "stash:heart"
-                ? theme.palette.text.secondary
-                : theme.palette.accent.main,
-          }}
-        />
+      <IconButton
+        onClick={toggleFavorite}
+        disabled={loading || toggling || error}
+      >
+        {loading ? (
+          <CircularProgress
+            size={24}
+            sx={{ color: theme.palette.accent.main }}
+          />
+        ) : (
+          <Icon
+            icon={isFavorited ? "stash:heart-solid" : "stash:heart"}
+            style={{
+              fontSize: "48px",
+              color: isFavorited
+                ? theme.palette.accent.main
+                : theme.palette.text.secondary,
+            }}
+          />
+        )}
       </IconButton>
     </Box>
   );
