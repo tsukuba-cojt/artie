@@ -64,7 +64,7 @@ export default function RegisterPage() {
         router.push("/");
       } else {
         setErrorMessage(
-          "プロフィール情報の登録に失敗しました。時間をおいてやりなおしてください。",
+          "プロフィール情報の登録に失敗しました。時間をおいてやりなおしてください。"
         );
       }
     } catch {
@@ -81,7 +81,7 @@ export default function RegisterPage() {
       flexDirection={"column"}
       justifyContent={"space-between"}
     >
-      <Header title={"アカウント作成"} backPath="/auth/login" />
+      <Header title={"アカウント作成"} showBackButton={true} />
 
       <Stack flexGrow={1} gap={3} p={2}>
         <Box>

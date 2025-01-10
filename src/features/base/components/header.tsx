@@ -12,18 +12,18 @@ import { Box } from "@mui/material";
 interface HeaderProps {
   title: string;
   rightReactNode?: ReactNode;
-  showBackButton?: boolean; // Optional prop to control back button visibility
+  showBackButton?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
   title,
   rightReactNode,
-  showBackButton = true,
+  showBackButton = false,
 }) => {
   const router = useRouter();
 
   const handleBack = () => {
-    router.back(); // Navigate to the previous page
+    router.back();
   };
 
   return (
@@ -42,10 +42,9 @@ const Header: React.FC<HeaderProps> = ({
           padding: "0 16px",
         }}
       >
-        {/* Left Side */}
         <Box
           sx={{
-            width: "48px", // Ensure consistent width
+            width: "48px",
             display: "flex",
             justifyContent: "flex-start",
           }}
@@ -61,7 +60,6 @@ const Header: React.FC<HeaderProps> = ({
           )}
         </Box>
 
-        {/* Center Title */}
         <Box sx={{ flexGrow: 1, textAlign: "center" }}>
           <Typography
             variant="h6"
@@ -73,10 +71,9 @@ const Header: React.FC<HeaderProps> = ({
           </Typography>
         </Box>
 
-        {/* Right Side */}
         <Box
           sx={{
-            width: "48px", // Match the left side's width
+            width: "48px",
             display: "flex",
             justifyContent: "flex-end",
           }}
