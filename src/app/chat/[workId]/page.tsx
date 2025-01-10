@@ -37,9 +37,8 @@ export default function Chat() {
 
       const data = await response.json();
       setHistory(data.history);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message);
+    } catch {
+      setError("予期せぬエラーが発生しました。");
     } finally {
       setLoading(false);
     }
@@ -66,9 +65,8 @@ export default function Chat() {
 
       const data = await response.json();
       setHistory(data.history);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message);
+    } catch {
+      setError("予期せぬエラーが発生しました。");
     }
   };
 
