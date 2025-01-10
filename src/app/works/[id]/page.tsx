@@ -3,6 +3,7 @@
 import { AboutWorks } from "@/features/works/components/AboutWorks";
 import Header from "@/features/works/components/Header";
 import SlidingTabs from "@/features/works/components/SlideBar";
+import FloatingActionButton from "@/features/works/components/FloatingChat";
 import { Box, Stack, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -48,7 +49,7 @@ const WorkPage = () => {
 
   return (
     <Stack sx={{ height: "100%", width: "100%" }}>
-      <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
+      <Box sx={{ position: "relative", height: "100%,", width: "100%" }}>
         {loading ? (
           <Box
             sx={{
@@ -84,6 +85,7 @@ const WorkPage = () => {
               author={workData.author}
             />
             <SlidingTabs />
+            <FloatingActionButton id={id} />
           </>
         )}
       </Box>
