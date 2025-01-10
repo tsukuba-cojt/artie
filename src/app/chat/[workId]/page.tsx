@@ -13,7 +13,6 @@ import ChatInput from "@/features/chat/components/Input";
 import { useParams } from "next/navigation";
 import { LLMMessage } from "@/lib/executeLLM";
 import Header from "@/features/base/components/header";
-import { relative } from "path";
 
 export default function Chat() {
   const { workId } = useParams();
