@@ -81,7 +81,7 @@ export default function RegisterPage() {
       flexDirection={"column"}
       justifyContent={"space-between"}
     >
-      <Header title={"アカウント作成"} backPath="/auth/login" />
+      <Header title={"アカウント作成"} showBackButton={true} />
 
       <Stack flexGrow={1} gap={3} p={2}>
         <Box>

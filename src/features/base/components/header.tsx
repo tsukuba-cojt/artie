@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ReactNode } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,16 +12,18 @@ import { Box } from "@mui/material";
 interface HeaderProps {
   title: string;
   rightReactNode?: ReactNode;
-  backPath?: string;
+  showBackButton?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, backPath, rightReactNode }) => {
+const Header: React.FC<HeaderProps> = ({
+  title,
+  rightReactNode,
+  showBackButton = false,
+}) => {
   const router = useRouter();
 
   const handleBack = () => {
-    if (backPath) {
-      router.push(backPath);
-    }
+    router.back();
   };
 
   return (
@@ -34,45 +38,48 @@ const Header: React.FC<HeaderProps> = ({ title, backPath, rightReactNode }) => {
       <Toolbar
         sx={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
-          position: "relative",
           padding: "0 16px",
         }}
       >
-        {/* 左端の戻るボタン */}
-        {backPath ? (
-          <IconButton
-            edge="start"
-            onClick={handleBack}
-            sx={{ color: "accent.main", padding: 0 }}
-          >
-            <Icon icon="stash:angle-left-duotone" width="32" height="32" />
-          </IconButton>
-        ) : (
-          <Box />
-        )}
-
-        {/* 中央のタイトル */}
-        <Typography
-          variant="h6"
+        <Box
           sx={{
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontWeight: "bold",
-            textAlign: "center",
+            width: "48px",
+            display: "flex",
+            justifyContent: "flex-start",
           }}
         >
-          {title}
-        </Typography>
+          {showBackButton && (
+            <IconButton
+              edge="start"
+              onClick={handleBack}
+              sx={{ color: "accent.main", padding: 0 }}
+            >
+              <Icon icon="stash:angle-left-duotone" width="32" height="32" />
+            </IconButton>
+          )}
+        </Box>
 
-        {/* 右端のノード */}
-        {rightReactNode && (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {rightReactNode}
-          </Box>
-        )}
+        <Box sx={{ flexGrow: 1, textAlign: "center" }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            width: "48px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          {rightReactNode}
+        </Box>
       </Toolbar>
     </AppBar>
   );
