@@ -2,26 +2,24 @@ import { executeLLM, LLMMessage } from "@/lib/executeLLM";
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
+// リクエストボディの型定義
 type RequestBody = {
-  userId: string;
-  workId: string;
   message: string;
+  history: LLMMessage[];
 };
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { workId: string } }
+) {
   try {
-    const {
-      userId,
-      workId,
-      message: inputMessage,
-    }: RequestBody = await req.json();
+    const { workId } = params;
+
+    // リクエストボディをパース
+    const { message: inputMessage, history }: RequestBody = await req.json();
 
     // バリデーション: 必須フィールドが正しい型であることを確認
-    if (
-      typeof userId !== "string" ||
-      typeof workId !== "string" ||
-      typeof inputMessage !== "string"
-    ) {
+    if (typeof inputMessage !== "string" || !Array.isArray(history)) {
       return NextResponse.json(
         { reply: "不正なリクエストです。" },
         { status: 400 }
@@ -33,28 +31,14 @@ export async function POST(req: NextRequest) {
 
     const supabase = createClient();
 
-    // Supabaseから会話履歴を取得
-    const { data: conversations, error: fetchError } = await supabase
-      .from("Conversation")
-      .select("sender, message, createdAt")
-      .eq("userId", userId)
-      .eq("workId", workId)
-      .order("createdAt", { ascending: true });
+    const { data: userData, error: userError } = await supabase.auth.getUser();
 
-    if (fetchError) {
+    if (userError || !userData.user) {
       return NextResponse.json(
-        { reply: "会話履歴の取得中にエラーが発生しました。" },
+        { error: "ユーザー情報の取得に失敗しました。" },
         { status: 500 }
       );
     }
-
-    // ConversationデータをLLMMessage形式にマッピング
-    const history: LLMMessage[] = conversations
-      ? conversations.map((conv) => ({
-          role: conv.sender === "USER" ? "user" : "assistant",
-          content: conv.message,
-        }))
-      : [];
 
     // LLMを実行してAIの応答を取得
     const aiReply = await executeLLM({
@@ -64,7 +48,7 @@ export async function POST(req: NextRequest) {
     });
 
     // 新しいメッセージを会話履歴に追加
-    const updatedHistory = [
+    const updatedHistory: LLMMessage[] = [
       ...history,
       { role: "user", content: inputMessage },
       { role: "assistant", content: aiReply },
@@ -73,13 +57,13 @@ export async function POST(req: NextRequest) {
     // 新しい会話メッセージをSupabaseに挿入
     const newConversations = [
       {
-        userId,
+        userId: userData.user.id,
         workId,
         sender: "USER",
         message: inputMessage,
       },
       {
-        userId,
+        userId: userData.user.id,
         workId,
         sender: "AI",
         message: aiReply,

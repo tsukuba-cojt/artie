@@ -48,7 +48,7 @@ model Work {
 }
 
 model Conversation {
-  id        String   @id @default(uuid()) @db.Uuid // UUID 型
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // ユーザーとの関連
   userId    String   @db.Uuid
   work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade) // 作品との関連

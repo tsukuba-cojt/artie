@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import { Box, InputBase, IconButton } from "@mui/material";
 import { Icon } from "@iconify/react";
 
-const ChatInput = () => {
+type ChatInputProps = {
+  onSend: (message: string) => void;
+};
+
+const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
   const [message, setMessage] = useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,29 +17,25 @@ const ChatInput = () => {
 
   const handleSend = () => {
     if (message.trim() !== "") {
-      sendMessageToDatabase(message); // Call your function to send the message
-      setMessage(""); // Clear the input field after sending
+      onSend(message);
+      setMessage("");
     }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      handleSend(); // Trigger sending the message when Enter is pressed
+      handleSend();
     }
-  };
-
-  const sendMessageToDatabase = async (message: string) => {
-    console.log("Sending message:", message);
-    // Add your database logic here
   };
 
   return (
     <Box
       sx={{
         width: "100%",
+        height: "55px",
         paddingX: 2,
         paddingY: 1,
-        background: "white",
+        backgroundColor: "common.white",
         boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.15)",
         borderRadius: 48,
         overflow: "hidden",
@@ -46,10 +46,10 @@ const ChatInput = () => {
     >
       {/* Input Field */}
       <InputBase
-        placeholder="Type message here..."
+        placeholder="メッセージを入力..."
         value={message}
         onChange={handleChange}
-        onKeyDown={handleKeyDown} // Listen for key presses
+        onKeyDown={handleKeyDown}
         sx={{
           flex: 1,
           height: 40,
@@ -57,7 +57,6 @@ const ChatInput = () => {
           paddingX: 1,
           color: "accent.main",
           fontSize: 16,
-          fontFamily: '"Noto Sans", sans-serif',
           fontWeight: 400,
           lineHeight: "24px",
           letterSpacing: "0.5px",

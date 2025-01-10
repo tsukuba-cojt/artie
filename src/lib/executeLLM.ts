@@ -40,7 +40,7 @@ export const executeLLM = async ({
       ];
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4-2024-08-06",
+        model: "gpt-4o-2024-08-06",
         messages: messages,
         max_tokens: 150,
         temperature: 0.7,
