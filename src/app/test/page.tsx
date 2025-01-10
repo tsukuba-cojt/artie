@@ -1,17 +1,8 @@
-"use client";
-
+import Header from "@/features/base/components/header";
 import React from "react";
-import { Box } from "@mui/material";
-import SpeechBubble from "@/features/base/components/SpeechBubble";
 
-export default function Home() {
-  return (
-    <Box>
-      <SpeechBubble
-        content="モナリザって誰が書OOOOOOOOOOOOOdsbajdksnalkdskklOOOO？"
-        sender={true}
-      />
-      <SpeechBubble content="レオナルドダヴィンチだよ！" sender={true} />
-    </Box>
-  );
-}
+const MinimalPage: React.FC = () => {
+  return <Header title="Minimal Page" />;
+};
+
+export default MinimalPage;

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ReactNode } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,16 +12,13 @@ import { Box } from "@mui/material";
 interface HeaderProps {
   title: string;
   rightReactNode?: ReactNode;
-  backPath?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, backPath, rightReactNode }) => {
+const Header: React.FC<HeaderProps> = ({ title, rightReactNode }) => {
   const router = useRouter();
 
   const handleBack = () => {
-    if (backPath) {
-      router.push(backPath);
-    }
+    router.back(); // Navigate to the previous page
   };
 
   return (
@@ -40,20 +39,16 @@ const Header: React.FC<HeaderProps> = ({ title, backPath, rightReactNode }) => {
           padding: "0 16px",
         }}
       >
-        {/* 左端の戻るボタン */}
-        {backPath ? (
-          <IconButton
-            edge="start"
-            onClick={handleBack}
-            sx={{ color: "accent.main", padding: 0 }}
-          >
-            <Icon icon="stash:angle-left-duotone" width="32" height="32" />
-          </IconButton>
-        ) : (
-          <Box />
-        )}
+        {/* Back Button */}
+        <IconButton
+          edge="start"
+          onClick={handleBack}
+          sx={{ color: "accent.main", padding: 0 }}
+        >
+          <Icon icon="stash:angle-left-duotone" width="32" height="32" />
+        </IconButton>
 
-        {/* 中央のタイトル */}
+        {/* Center Title */}
         <Typography
           variant="h6"
           sx={{
@@ -67,7 +62,7 @@ const Header: React.FC<HeaderProps> = ({ title, backPath, rightReactNode }) => {
           {title}
         </Typography>
 
-        {/* 右端のノード */}
+        {/* Right Node */}
         {rightReactNode && (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {rightReactNode}
