@@ -96,7 +96,7 @@ test.describe.serial("検索ページのテスト", () => {
     const noResultsMessage = searchPage.getNoSearchResultsMessage();
     await expect(noResultsMessage).toBeVisible();
     await expect(noResultsMessage).toHaveText(
-      "検索結果が見つかりませんでした。"
+      "検索結果が見つかりませんでした。",
     );
   });
 

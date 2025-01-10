@@ -34,7 +34,7 @@ export const executeLLM = async ({
           (msg): LLMMessage => ({
             role: msg.role,
             content: msg.content,
-          })
+          }),
         ),
         { role: "user", content: prompt },
       ];
