@@ -6,7 +6,7 @@ import ChatInput from "@/features/chat/components/Input";
 import { useParams } from "next/navigation";
 
 export default function Home() {
-  const { id } = useParams(); // Retrieve `id` from the route
+  const { workId } = useParams(); // Retrieve `workId` from the route
 
   return (
     <>
@@ -20,7 +20,7 @@ export default function Home() {
       >
         <ChatInput />
       </Box>
-      <Typography>ID: {id}</Typography>
+      <Typography>ID: {workId}</Typography>
     </>
   );
 }
