@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, InputBase, IconButton } from "@mui/material";
+import { Box, InputBase, IconButton, CircularProgress } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 type ChatInputProps = {
   onSend: (message: string) => void;
+  disabled?: boolean;
 };
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled = false }) => {
   const [message, setMessage] = useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +24,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && !disabled) {
       handleSend();
     }
   };
@@ -44,12 +45,12 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
         gap: 1,
       }}
     >
-      {/* Input Field */}
       <InputBase
         placeholder="メッセージを入力..."
         value={message}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        disabled={disabled}
         sx={{
           flex: 1,
           height: 40,
@@ -63,14 +64,18 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
         }}
       />
 
-      {/* Send Button */}
       <IconButton
         onClick={handleSend}
+        disabled={disabled}
         sx={{
           color: "accent.main",
         }}
       >
-        <Icon icon="akar-icons:paper-airplane" style={{ fontSize: "24px" }} />
+        {disabled ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          <Icon icon="akar-icons:paper-airplane" style={{ fontSize: "24px" }} />
+        )}
       </IconButton>
     </Box>
   );

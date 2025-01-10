@@ -50,8 +50,16 @@ export async function POST(
     // 新しいメッセージを会話履歴に追加
     const updatedHistory: LLMMessage[] = [
       ...history,
-      { role: "user", content: inputMessage },
-      { role: "assistant", content: aiReply },
+      {
+        role: "user",
+        content: inputMessage,
+        created_at: new Date().toISOString(),
+      },
+      {
+        role: "assistant",
+        content: aiReply,
+        created_at: new Date().toISOString(),
+      },
     ];
 
     // 新しい会話メッセージをSupabaseに挿入

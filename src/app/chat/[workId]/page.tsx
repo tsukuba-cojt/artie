@@ -20,8 +20,8 @@ export default function Chat() {
   const [history, setHistory] = useState<LLMMessage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [sending, setSending] = useState<boolean>(false);
 
-  // 会話履歴を取得する関数
   const fetchHistory = async () => {
     try {
       const response = await fetch(`/api/chat/${workId}/history`, {
@@ -32,13 +32,13 @@ export default function Chat() {
       });
 
       if (!response.ok) {
-        throw new Error("会話履歴の取得に失敗しました。");
+        throw new Error();
       }
 
       const data = await response.json();
       setHistory(data.history);
     } catch {
-      setError("予期せぬエラーが発生しました。");
+      setError("会話履歴の取得に失敗しました。");
     } finally {
       setLoading(false);
     }
@@ -46,9 +46,9 @@ export default function Chat() {
 
   // メッセージを送信する関数
   const sendMessage = async (message: string) => {
+    setSending(true);
     try {
       const response = await fetch(`/api/chat/${workId}/llm`, {
-        // 正しいAPIパスに変更
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,17 +60,18 @@ export default function Chat() {
       });
 
       if (!response.ok) {
-        throw new Error("メッセージの送信に失敗しました。");
+        throw new Error();
       }
 
       const data = await response.json();
       setHistory(data.history);
     } catch {
       setError("予期せぬエラーが発生しました。");
+    } finally {
+      setSending(false);
     }
   };
 
-  // コンポーネントのマウント時に会話履歴を取得
   useEffect(() => {
     fetchHistory();
   }, [workId]);
@@ -106,7 +107,7 @@ export default function Chat() {
         </List>
       </Box>
       <Box>
-        <ChatInput onSend={sendMessage} />
+        <ChatInput onSend={sendMessage} disabled={sending} />
       </Box>
     </Stack>
   );
