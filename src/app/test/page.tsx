@@ -1,4 +1,3 @@
-import Header from "@/features/base/components/header";
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import FloatingActionButton from "@/features/works/components/FloatingChat";
