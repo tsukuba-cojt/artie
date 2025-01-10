@@ -84,6 +84,7 @@ export default function SearchPage() {
           }}
         />
         <IconButton
+          id="searchButton"
           onClick={handleSearch}
           sx={{
             backgroundColor: "rgba(255, 255, 255, 0.80)",
@@ -119,6 +120,7 @@ export default function SearchPage() {
                 <strong>検索履歴</strong>
               </Typography>
               <Box
+                id="searchHistory"
                 sx={{
                   overflowX: "auto",
                   whiteSpace: "nowrap",
@@ -149,6 +151,7 @@ export default function SearchPage() {
                 <strong>よく検索される作品</strong>
               </Typography>
               <Box
+                id="searchPopular"
                 sx={{
                   overflowX: "auto",
                   whiteSpace: "nowrap",
@@ -182,6 +185,7 @@ export default function SearchPage() {
               alignItems: "center",
               height: "200px",
             }}
+            id="searchLoadingIndicator"
           >
             <CircularProgress sx={{ color: "accent.main" }} />
           </Box>
@@ -201,7 +205,7 @@ export default function SearchPage() {
             <Typography variant="h6">
               <strong>検索結果</strong>
             </Typography>
-            <Stack direction="column" gap={2}>
+            <Stack id="searchResultsContainer" direction="column" gap={2}>
               {searchResults.map((result) => (
                 <ArtBox
                   key={result.id}
@@ -217,7 +221,11 @@ export default function SearchPage() {
             <Typography variant="h6">
               <strong>検索結果</strong>
             </Typography>
-            <Typography variant="body1" sx={{ color: "text.primary" }}>
+            <Typography
+              id="noSearchResultsMessage"
+              variant="body1"
+              sx={{ color: "text.primary" }}
+            >
               検索結果が見つかりませんでした。
             </Typography>
           </Stack>
