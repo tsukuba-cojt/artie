@@ -31,8 +31,6 @@ export async function GET(req: NextRequest) {
       .eq("id", id)
       .single();
 
-    console.log(data);
-
     if (error || !data) {
       return NextResponse.json(
         { error: "Work not found or error fetching description" },
