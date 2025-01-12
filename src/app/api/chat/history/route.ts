@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(_req: NextRequest) {
   try {
     const supabase = createClient();
 
     const { data: userData, error: userError } = await supabase.auth.getUser();
-
     if (userError || !userData.user) {
       return NextResponse.json(
         { error: "ユーザー情報の取得に失敗しました。" },
@@ -42,24 +42,21 @@ export async function GET(_req: NextRequest) {
       );
     }
 
-    if (!data) {
-      return NextResponse.json(
-        { message: "会話履歴が存在しません。" },
-        { status: 404 },
-      );
+    const uniqueConversations = new Map<number, (typeof data)[0]>();
+    if (data) {
+      data.forEach((item) => {
+        if (!uniqueConversations.has(item.workId)) {
+          uniqueConversations.set(item.workId, item);
+        }
+      });
     }
 
-    const uniqueConversations = new Map();
-
-    // TODO: 一度すべてのconversationを取得しているので、非効率。各workに対して直近一つのconvのみを取得できるようにしたい。
-    data.forEach((item) => {
-      if (!uniqueConversations.has(item.workId)) {
-        uniqueConversations.set(item.workId, item);
-      }
-    });
+    const result = Array.from(uniqueConversations.values()).sort((a, b) =>
+      b.createdAt.localeCompare(a.createdAt),
+    );
 
     return NextResponse.json({
-      data: Array.from(uniqueConversations.values()),
+      data: result,
     });
   } catch (error) {
     if (error instanceof Error) {

@@ -58,7 +58,7 @@ export default function ChatPage() {
       } else {
         setError("データ取得に失敗しました。");
       }
-    } catch (e) {
+    } catch {
       setError("予期しないエラーが発生しました。");
     } finally {
       setLoading(false);
