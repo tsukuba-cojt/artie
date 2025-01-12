@@ -4,10 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   req: NextRequest,
-  context: Promise<{ params: { workId: string } }>,
+  { params }: { params: { workId: string } },
 ) {
   try {
-    const { params } = await context;
     const { workId } = await params;
 
     const supabase = createClient();
