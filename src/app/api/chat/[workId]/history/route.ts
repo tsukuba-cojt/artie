@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: { workId: string } },
 ) {
   try {
@@ -16,7 +16,7 @@ export async function POST(
     if (userError || !userData.user) {
       return NextResponse.json(
         { error: "ユーザー情報の取得に失敗しました。" },
-        { status: 500 },
+        { status: 401 },
       );
     }
 
@@ -35,30 +35,22 @@ export async function POST(
       );
     }
 
-    // ConversationデータをLLMMessage形式にマッピング
-    const history: LLMMessage[] = conversations
-      ? conversations.map((conv) => ({
-          role: conv.sender === "USER" ? "user" : "assistant",
-          content: conv.message,
-          created_at: conv.createdAt,
-        }))
-      : [];
+    const history: LLMMessage[] =
+      conversations?.map((conv) => ({
+        role: conv.sender === "USER" ? "user" : "assistant",
+        content: conv.message,
+        created_at: conv.createdAt,
+      })) || [];
 
     return NextResponse.json({
       history,
     });
   } catch (error) {
     console.error("APIエラー:", error);
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: `エラーが発生しました: ${error.message}` },
-        { status: 500 },
-      );
-    } else {
-      return NextResponse.json(
-        { error: "未知のエラーが発生しました。" },
-        { status: 500 },
-      );
-    }
+    const errorMessage =
+      error instanceof Error
+        ? `エラーが発生しました: ${error.message}`
+        : "未知のエラーが発生しました。";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

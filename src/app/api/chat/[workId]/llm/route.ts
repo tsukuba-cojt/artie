@@ -13,7 +13,7 @@ export async function POST(
   { params }: { params: { workId: string } },
 ) {
   try {
-    const { workId } = params;
+    const { workId } = await params;
 
     // リクエストボディをパース
     const { message: inputMessage, history }: RequestBody = await req.json();
