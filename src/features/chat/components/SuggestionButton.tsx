@@ -1,16 +1,14 @@
-"use client";
-
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 
 interface ClickableSpeechBubbleProps {
   content: string;
-  onClick?: () => void; // Callback for button click
+  onSend: (message: string) => void; // Callback for sending a message
 }
 
 const ClickableSpeechBubble: React.FC<ClickableSpeechBubbleProps> = ({
   content,
-  onClick,
+  onSend,
 }) => {
   const bubbleColor = "common.white";
 
@@ -24,7 +22,7 @@ const ClickableSpeechBubble: React.FC<ClickableSpeechBubbleProps> = ({
       }}
     >
       <Button
-        onClick={onClick}
+        onClick={() => onSend(content)} // Automatically send the `content`
         sx={{
           backgroundColor: bubbleColor,
           color: "common.black",

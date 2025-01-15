@@ -26,7 +26,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
         sx={{
           backgroundColor: bubbleColor,
           color: sender ? "common.black" : "common.white",
-          maxWidth: "60%",
+          maxWidth: "100%",
           padding: "8px 12px",
           borderRadius: sender ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
           boxShadow: "2px 2px 6px rgba(0, 0, 0, 0.2)",

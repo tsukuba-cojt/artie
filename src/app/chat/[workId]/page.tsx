@@ -1,114 +1,236 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-} from "@mui/material";
-import ChatInput from "@/features/chat/components/Input";
+import { Box, Stack, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "next/navigation";
-import { LLMMessage } from "@/lib/executeLLM";
+import { useEffect, useRef, useState } from "react";
+import ChatInput from "@/features/chat/components/Input";
+import SpeechBubble from "@/features/base/components/SpeechBubble";
 import Header from "@/features/base/components/header";
+import ClickableSpeechBubble from "@/features/chat/components/SuggestionButton";
 
-export default function Chat() {
+const ChatPage = () => {
   const { workId } = useParams();
-
-  const [history, setHistory] = useState<LLMMessage[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [workData, setWorkData] = useState({
+    imageUrl: "",
+    title: "",
+  });
+  const [messages, setMessages] = useState<
+    { sender: string; message: string; createdAt: string }[]
+  >([]);
   const [error, setError] = useState<string | null>(null);
-  const [sending, setSending] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchHistory = async () => {
-    try {
-      const response = await fetch(`/api/chat/${workId}/history`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-      if (!response.ok) {
-        throw new Error();
-      }
+  useEffect(() => {
+    if (workId) {
+      const fetchWorkAndMessages = async () => {
+        setLoading(true);
+        try {
+          const workRes = await fetch(`/api/works?id=${workId}`, {
+            method: "GET",
+          });
+          const workData = await workRes.json();
 
-      const data = await response.json();
-      setHistory(data.history);
-    } catch {
-      setError("会話履歴の取得に失敗しました。");
-    } finally {
-      setLoading(false);
+          if (workRes.ok) {
+            setWorkData({
+              imageUrl: workData.data.imageUrl || "",
+              title: workData.data.title || "Unknown Title",
+            });
+          } else {
+            setError("データの取得に失敗しました");
+          }
+
+          const historyRes = await fetch(`/api/chat/${workId}/history`, {
+            method: "POST",
+          });
+          const historyData = await historyRes.json();
+
+          if (historyRes.ok) {
+            setMessages(historyData.data || []);
+          } else {
+            setError("会話履歴の取得に失敗しました。");
+          }
+        } catch {
+          setError("データの取得に失敗しました");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchWorkAndMessages();
     }
-  };
+  }, [workId]);
 
-  // メッセージを送信する関数
-  const sendMessage = async (message: string) => {
-    setSending(true);
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSendMessage = async (message: string) => {
+    if (!message.trim()) return;
+
     try {
-      const response = await fetch(`/api/chat/${workId}/llm`, {
+      const res = await fetch(`/api/chat/${workId}/llm`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message,
-          history,
+          history: messages.map((msg) => ({
+            role: msg.sender === "USER" ? "user" : "assistant",
+            content: msg.message,
+          })),
         }),
       });
 
-      if (!response.ok) {
-        throw new Error();
-      }
+      const data = await res.json();
 
-      const data = await response.json();
-      setHistory(data.history);
+      if (res.ok) {
+        setMessages((prev) => [
+          ...prev,
+          { sender: "USER", message, createdAt: new Date().toISOString() },
+          {
+            sender: "AI",
+            message: data.reply,
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+      } else {
+        setError(data.reply || "メッセージの送信に失敗しました。");
+      }
     } catch {
-      setError("予期せぬエラーが発生しました。");
-    } finally {
-      setSending(false);
+      setError("メッセージの送信中にエラーが発生しました。");
     }
   };
 
-  useEffect(() => {
-    fetchHistory();
-  }, [workId]);
-
-  if (loading) return <Typography>読み込み中...</Typography>;
-  if (error) return <Typography color="error">Error: {error}</Typography>;
-
   return (
     <Stack
-      direction="column"
-      height="calc(100vh - 120px)"
-      px={2}
-      gap={2}
-      sx={{ width: "100vw" }}
+      sx={{
+        height: "100vh",
+        width: "100%",
+        justifyContent: "space-between",
+        overflow: "hidden",
+      }}
     >
-      <Header title="Chat" showBackButton={true} />
-      <Box flexGrow={1} overflow="auto">
-        <List>
-          {history.map((msg, index) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={
-                  <Typography
-                    variant="body1"
-                    align={msg.role === "user" ? "right" : "left"}
-                  >
-                    {msg.role === "user" ? "You" : "Bot"}: {msg.content}
-                  </Typography>
-                }
+      <Header title={workData.title || "Loading..."} showBackButton={true} />
+
+      <Box
+        ref={chatContainerRef}
+        sx={{
+          flex: 1,
+          overflowY: "auto",
+          padding: 3,
+        }}
+      >
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <CircularProgress sx={{ color: "accent.main" }} />
+          </Box>
+        ) : error ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Typography sx={{ color: "accent.main", textAlign: "center" }}>
+              {error}
+            </Typography>
+          </Box>
+        ) : (
+          messages.map((msg, index) => (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                alignItems: "flex-end",
+                gap: 0,
+                marginBottom: "20px",
+                flexDirection: msg.sender === "USER" ? "row-reverse" : "row",
+                justifyContent: msg.sender === "AI" ? "flex-end" : "flex-start",
+              }}
+            >
+              {msg.sender !== "USER" && (
+                <Box
+                  component="img"
+                  src="/images/profile_artie.png"
+                  alt="Profile Image"
+                  sx={{ width: 150, height: 150, borderRadius: "50%" }}
+                />
+              )}
+              <SpeechBubble
+                content={msg.message}
+                sender={msg.sender === "USER"}
+                sx={{
+                  backgroundColor: msg.sender === "USER" ? "red" : "white",
+                  color: msg.sender === "USER" ? "white" : "black",
+                }}
               />
-            </ListItem>
-          ))}
-        </List>
+            </Box>
+          ))
+        )}
       </Box>
-      <Box>
-        <ChatInput onSend={sendMessage} disabled={sending} />
+
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "110px",
+          left: 0,
+          width: "100%",
+          zIndex: 10,
+          padding: "10px",
+          display: "flex",
+          gap: 2,
+        }}
+      >
+        <ChatInput onSend={handleSendMessage} />
       </Box>
+
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "180px",
+          left: 0,
+          width: "100%",
+          zIndex: 10,
+          padding: "10px",
+          display: "flex",
+          justifyContent: "space-around",
+        }}
+      >
+        {["豆知識", "誰が描いたの", "いつ書かれたの"].map((text) => (
+          <ClickableSpeechBubble
+            key={text}
+            content={text}
+            onSend={handleSendMessage}
+          />
+        ))}
+      </Box>
+
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          width: "100%",
+          height: "100px",
+        }}
+      ></Box>
     </Stack>
   );
-}
+};
+
+export default ChatPage;
