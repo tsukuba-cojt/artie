@@ -25,11 +25,11 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ id }) => {
 
   return (
     <Fab
-      color="accent"
-      style={{
+      sx={{
         position: "fixed",
         bottom: "100px",
         right: "20px",
+        backgroundColor: "accent.main",
       }}
       onClick={handleClick}
       disabled={isLoading}

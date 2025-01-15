@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { workId: string } },
+  req: Request,
+  { params }: { params: Promise<{ workId: string }> },
 ) {
   try {
     const { workId } = await params;
@@ -55,7 +55,7 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { workId: string } },
+  { params }: { params: Promise<{ workId: string }> },
 ) {
   try {
     const { workId } = await params;
