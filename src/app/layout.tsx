@@ -12,7 +12,8 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const shouldShowNavigationBar = !pathname.startsWith("/auth");
+  const shouldShowNavigationBar =
+    !pathname.startsWith("/auth") && !pathname.startsWith("/chat/");
 
   return (
     <html lang="en">

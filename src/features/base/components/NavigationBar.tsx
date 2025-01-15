@@ -69,7 +69,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
         width: "100vw",
         display: "flex",
         justifyContent: "center",
-        bottom: "5px",
+        bottom: "0px",
         position: "fixed",
         zIndex: 1000,
       }}
