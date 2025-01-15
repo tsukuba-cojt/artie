@@ -55,7 +55,7 @@ export default function SearchPage() {
   };
 
   return (
-    <Stack flexDirection="column" height="100vh" px={2} gap={2}>
+    <Stack flexDirection="column" height="100dvh" px={2} gap={2}>
       <Header title="Search" showBackButton={false} />
 
       <Stack

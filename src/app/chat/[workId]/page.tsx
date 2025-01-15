@@ -110,7 +110,7 @@ const ChatPage = () => {
   return (
     <Stack
       sx={{
-        height: "100vh",
+        height: "100dvh",
         width: "100%",
         justifyContent: "space-between",
         overflow: "hidden",

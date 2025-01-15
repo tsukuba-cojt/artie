@@ -8,7 +8,7 @@ const FabTestPage = () => {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "100dvh",
         width: "100vw",
         display: "flex",
         flexDirection: "column",

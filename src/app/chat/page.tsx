@@ -77,7 +77,13 @@ export default function ChatPage() {
   }, []);
 
   return (
-    <Stack flexDirection="column" height="100vh" px={2} gap={2} width={"100vw"}>
+    <Stack
+      flexDirection="column"
+      height="100dvh"
+      px={2}
+      gap={2}
+      width={"100vw"}
+    >
       <Header title="Chat" showBackButton={false} />
 
       <Stack
