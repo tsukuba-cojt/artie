@@ -51,7 +51,7 @@ export default function ChatPage() {
             imageUrl: item.Work.imageUrl,
             message: item.message,
             createdAt: item.createdAt,
-          })
+          }),
         );
         setWorks(formattedWorks);
         setFilteredWorks(formattedWorks);
@@ -67,7 +67,7 @@ export default function ChatPage() {
 
   const handleSearch = () => {
     const filtered = works.filter((work) =>
-      work.title.toLowerCase().includes(searchQuery.toLowerCase())
+      work.title.toLowerCase().includes(searchQuery.toLowerCase()),
     );
     setFilteredWorks(filtered);
   };
