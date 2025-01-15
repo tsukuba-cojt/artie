@@ -1,10 +1,10 @@
 import { LLMMessage } from "@/lib/executeLLM";
 import { createClient } from "@/lib/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function POST(
-  req: NextRequest,
-  { params }: { params: { workId: string } },
+  req: Request,
+  { params }: { params: Promise<{ workId: string }> },
 ) {
   try {
     const { workId } = await params;
