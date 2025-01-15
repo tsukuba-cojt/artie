@@ -174,10 +174,6 @@ const ChatPage = () => {
               <SpeechBubble
                 content={msg.message}
                 sender={msg.sender === "USER"}
-                sx={{
-                  backgroundColor: msg.sender === "USER" ? "red" : "white",
-                  color: msg.sender === "USER" ? "white" : "black",
-                }}
               />
             </Box>
           ))
