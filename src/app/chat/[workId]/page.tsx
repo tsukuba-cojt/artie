@@ -19,7 +19,7 @@ const ChatPage = () => {
   >([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [sending, setSending] = useState<boolean>(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,9 +27,8 @@ const ChatPage = () => {
       const fetchWorkAndMessages = async () => {
         setLoading(true);
         try {
-          const workRes = await fetch(`/api/works?id=${workId}`, {
-            method: "GET",
-          });
+          // Fetch work data
+          const workRes = await fetch(`/api/works?id=${workId}`);
           const workData = await workRes.json();
 
           if (workRes.ok) {
@@ -38,21 +37,38 @@ const ChatPage = () => {
               title: workData.data.title || "Unknown Title",
             });
           } else {
-            setError("データの取得に失敗しました");
+            setError("Failed to fetch work data.");
           }
 
+          // Fetch chat history
           const historyRes = await fetch(`/api/chat/${workId}/history`, {
             method: "POST",
           });
           const historyData = await historyRes.json();
 
+          console.log("Chat history response:", historyData); // Debugging line
+
           if (historyRes.ok) {
-            setMessages(historyData.data || []);
+            console.log(historyRes);
+            setMessages(
+              historyData.history.map(
+                (msg: {
+                  role: string;
+                  content: string;
+                  created_at: string;
+                }) => ({
+                  sender: msg.role,
+                  message: msg.content,
+                  createdAt: msg.created_at,
+                }),
+              ),
+            );
           } else {
-            setError("会話履歴の取得に失敗しました。");
+            setError("Failed to fetch chat history.");
           }
-        } catch {
-          setError("データの取得に失敗しました");
+        } catch (err) {
+          setError("Failed to fetch data.");
+          console.error(err); // Debugging line
         } finally {
           setLoading(false);
         }
@@ -72,6 +88,8 @@ const ChatPage = () => {
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
 
+    setSending(true);
+
     try {
       const res = await fetch(`/api/chat/${workId}/llm`, {
         method: "POST",
@@ -80,8 +98,9 @@ const ChatPage = () => {
         },
         body: JSON.stringify({
           message,
+          context: workData.title || "Unknown Title",
           history: messages.map((msg) => ({
-            role: msg.sender === "USER" ? "user" : "assistant",
+            role: msg.sender === "user" ? "user" : "assistant",
             content: msg.message,
           })),
         }),
@@ -92,7 +111,7 @@ const ChatPage = () => {
       if (res.ok) {
         setMessages((prev) => [
           ...prev,
-          { sender: "USER", message, createdAt: new Date().toISOString() },
+          { sender: "user", message, createdAt: new Date().toISOString() },
           {
             sender: "AI",
             message: data.reply,
@@ -100,17 +119,19 @@ const ChatPage = () => {
           },
         ]);
       } else {
-        setError(data.reply || "メッセージの送信に失敗しました。");
+        setError(data.reply || "Failed to send message.");
       }
     } catch {
-      setError("メッセージの送信中にエラーが発生しました。");
+      setError("An error occurred while sending the message.");
+    } finally {
+      setSending(false);
     }
   };
 
   return (
     <Stack
       sx={{
-        height: "100dvh",
+        height: "100vh",
         width: "100%",
         justifyContent: "space-between",
         overflow: "hidden",
@@ -124,6 +145,7 @@ const ChatPage = () => {
           flex: 1,
           overflowY: "auto",
           padding: 3,
+          paddingBottom: "200px", // Ensure space for fixed input and buttons
         }}
       >
         {loading ? (
@@ -151,39 +173,87 @@ const ChatPage = () => {
             </Typography>
           </Box>
         ) : (
-          messages.map((msg, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: "flex",
-                alignItems: "flex-end",
-                gap: 0,
-                marginBottom: "20px",
-                flexDirection: msg.sender === "USER" ? "row-reverse" : "row",
-                justifyContent: msg.sender === "AI" ? "flex-end" : "flex-start",
-              }}
-            >
-              {msg.sender !== "USER" && (
+          <>
+            {messages.map((msg, index) => (
+              <Box
+                key={index}
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  gap: 2,
+                  marginBottom: "10px",
+                  flexDirection: msg.sender === "user" ? "row-reverse" : "row",
+                  justifyContent:
+                    msg.sender === "user" ? "flex-start" : "flex-end",
+                }}
+              >
+                {msg.sender !== "user" && (
+                  <Box
+                    component="img"
+                    src="/images/profile_artie.png"
+                    alt="Profile Image"
+                    sx={{ width: 50, height: 50, borderRadius: "50%" }}
+                  />
+                )}
                 <Box
-                  component="img"
-                  src="/images/profile_artie.png"
-                  alt="Profile Image"
-                  sx={{ width: 150, height: 150, borderRadius: "50%" }}
-                />
-              )}
-              <SpeechBubble
-                content={msg.message}
-                sender={msg.sender === "USER"}
-              />
-            </Box>
-          ))
+                  sx={{
+                    alignSelf:
+                      msg.sender === "user" ? "flex-end" : "flex-start",
+                  }}
+                >
+                  <SpeechBubble
+                    content={msg.message}
+                    sender={msg.sender === "user"}
+                  />
+                </Box>
+              </Box>
+            ))}
+
+            {sending && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 2,
+                }}
+              >
+                <CircularProgress sx={{ color: "accent.main" }} />
+              </Box>
+            )}
+          </>
         )}
       </Box>
 
       <Box
         sx={{
           position: "fixed",
-          bottom: "110px",
+          bottom: "90px",
+          left: 0,
+          width: "100%",
+          zIndex: 10,
+          padding: "10px",
+          overflowX: "auto",
+          whiteSpace: "nowrap",
+          display: "flex",
+          gap: 2,
+        }}
+      >
+        {["豆知識", "誰が描いたの", "いつ書かれたの", "君は誰？"].map(
+          (text) => (
+            <ClickableSpeechBubble
+              key={text}
+              content={text}
+              onSend={handleSendMessage}
+            />
+          ),
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: "20px",
           left: 0,
           width: "100%",
           zIndex: 10,
@@ -194,37 +264,6 @@ const ChatPage = () => {
       >
         <ChatInput onSend={handleSendMessage} />
       </Box>
-
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: "180px",
-          left: 0,
-          width: "100%",
-          zIndex: 10,
-          padding: "10px",
-          display: "flex",
-          justifyContent: "space-around",
-        }}
-      >
-        {["豆知識", "誰が描いたの", "いつ書かれたの"].map((text) => (
-          <ClickableSpeechBubble
-            key={text}
-            content={text}
-            onSend={handleSendMessage}
-          />
-        ))}
-      </Box>
-
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          width: "100%",
-          height: "100px",
-        }}
-      ></Box>
     </Stack>
   );
 };
