@@ -146,6 +146,10 @@ export default function Scan() {
           height: "100dvh",
           objectFit: "cover",
         }}
+        playsInline
+        autoPlay
+        muted
+        controls={false}
       />
       <canvas
         ref={canvasRef}
