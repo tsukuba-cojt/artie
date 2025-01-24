@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,38 +8,42 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid
-  name      String
-  email     String   @unique
-  imageUrl  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  name          String
+  imageUrl      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
   conversations Conversation[]
   workFavorites WorkFavorite[]
 }
 
 model Author {
-  id        String   @id @default(uuid()) @db.Uuid // UUID 型に指定
-  name      String
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  era         String
+  birthplace  String
+  keywords    String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   description String
-  era       String
-  birthplace String
-  keywords  String[]
-  works     Work[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  works       Work[]
 }
 
 model Work {
-  id              String          @id
   title           String
   description     String
+  authorId        String         @db.Uuid
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  funFactComments    String[] @default([])
+  firstComment       String?
+  suggestComments    String[] @default([])
+  descriptionAudioUrl String?
+  id              String         @id
   imageUrl        String?
-  author          Author          @relation(fields: [authorId], references: [id])
-  authorId        String          @db.Uuid
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  conversations    Conversation[]
+  conversations   Conversation[]
+  author          Author         @relation(fields: [authorId], references: [id])
   workFavoritedBy WorkFavorite[]
 
   @@index([authorId])
@@ -53,32 +51,32 @@ model Work {
 
 model Conversation {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @db.Uuid
-  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
   workId    String
   sender    Sender   @default(USER)
   message   String
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([workId])
   @@index([createdAt])
 }
 
-enum Sender {
-  USER
-  AI
-}
-
 model WorkFavorite {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @db.Uuid
-  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
   workId    String
   createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
 
   @@unique([userId, workId])
   @@index([workId])
+}
+
+enum Sender {
+  USER
+  AI
 }
