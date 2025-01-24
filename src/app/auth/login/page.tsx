@@ -29,7 +29,7 @@ export default function LoginPage() {
           }}
         >
           <Image
-            src="/images/default_artie.png"
+            src="/images/artie/default.png"
             alt="artieちゃん"
             fill
             style={{
