@@ -8,12 +8,6 @@ import { getArtieImageUrl } from "@/lib/getArtieImageUrl";
 import { ShowArtieModel } from "@prisma/client";
 
 export default function Home() {
-  const handleClick = () => {
-    alert("ボタンがクリックされました！");
-  };
-
-  console.log(getArtieImageUrl(ShowArtieModel.DEFAULT));
-
   return (
     <Box
       sx={{
