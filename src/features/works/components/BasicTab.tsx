@@ -68,7 +68,7 @@ const BasicTab = () => {
   }
 
   return (
-    <Box sx={{ padding: "20px", textAlign: "left", mb: "111px" }}>
+    <Box sx={{ textAlign: "left", mb: "111px" }}>
       <Typography variant="body1" sx={{ marginTop: "10px" }}>
         {description}
       </Typography>

@@ -60,8 +60,8 @@ const ChatPage = () => {
                   sender: msg.role,
                   message: msg.content,
                   createdAt: msg.created_at,
-                }),
-              ),
+                })
+              )
             );
           } else {
             setError("Failed to fetch chat history.");
@@ -144,8 +144,8 @@ const ChatPage = () => {
         sx={{
           flex: 1,
           overflowY: "auto",
-          padding: 3,
-          paddingBottom: "200px", // Ensure space for fixed input and buttons
+          padding: 2,
+          paddingBottom: "160px",
         }}
       >
         {loading ? (
@@ -246,7 +246,7 @@ const ChatPage = () => {
               content={text}
               onSend={handleSendMessage}
             />
-          ),
+          )
         )}
       </Box>
 
