@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { Box, IconButton, Stack, useTheme } from "@mui/material";
 import NavigationBarSVG from "./NavigationBarSVG";
+import { usePathname } from "next/navigation";
 
 type NavItem = {
   label: string;
@@ -21,12 +22,13 @@ type NavigationBarProps = {
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
   const theme = useTheme();
+  const pathname = usePathname();
 
   const items: NavItem[] = [
     {
       label: "Home",
       icon: <Icon icon="lucide:home" style={{ fontSize: "24px" }} />,
-      route: "/home",
+      route: "/",
       fontFamily: "SF Pro Text",
       fontWeight: "400",
     },
@@ -84,7 +86,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
           zIndex: 1000,
         }}
       >
-        {/* SVG Background */}
         <Box
           sx={{
             position: "absolute",
@@ -107,7 +108,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
             justifyContent: "space-around",
           }}
         >
-          {/* Icons and Circles */}
           {items.map((item, index) => (
             <Box
               key={index}
@@ -132,7 +132,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
                       justifyContent: "center",
                     }}
                   >
-                    {/* Beige Circle */}
                     <Box
                       sx={{
                         width: "56px",
@@ -159,7 +158,12 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
                 ) : (
                   <IconButton
                     onClick={() => onItemSelect && onItemSelect(item.label)}
-                    sx={{ color: theme.palette.primary.main }}
+                    sx={{
+                      color:
+                        pathname === item.route
+                          ? theme.palette.primary.dark
+                          : theme.palette.primary.main,
+                    }}
                   >
                     {item.icon}
                   </IconButton>
@@ -167,7 +171,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ onItemSelect }) => {
               </Link>
               <Box
                 sx={{
-                  color: "primary.main",
+                  color:
+                    pathname === item.route
+                      ? theme.palette.primary.dark
+                      : theme.palette.primary.main,
                   fontSize: "12px",
                   fontFamily: item.fontFamily,
                   fontWeight: item.fontWeight,

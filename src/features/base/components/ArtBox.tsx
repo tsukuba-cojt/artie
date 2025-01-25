@@ -62,17 +62,32 @@ const ArtBox: React.FC<ArtBoxProps> = ({
         sx={{
           position: "absolute",
           bottom: 0,
-          padding: "24px",
+          padding: "12px",
           width: "100%",
         }}
       >
-        <Typography
-          className="title"
-          variant="body1"
-          sx={{ color: "text.secondary" }}
+        <Box
+          sx={{
+            // backgroundColor: "rgba(255, 255, 255, 0.4)",
+            borderRadius: "8px",
+            padding: "4px",
+            maxWidth: "calc(100% - 100px)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
         >
-          {title}
-        </Typography>
+          <Typography
+            className="title"
+            variant="caption"
+            sx={{
+              color: "text.secondary",
+              fontWeight: "bold",
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
         <Button
           sx={{
             backgroundColor: "common.white",
