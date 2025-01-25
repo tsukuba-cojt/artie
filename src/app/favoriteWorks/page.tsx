@@ -32,7 +32,6 @@ const FavoritesCard: React.FC = () => {
         }));
 
         setWorkData(formattedData);
-        setWorkData;
       } catch {
         setError(true);
       } finally {
