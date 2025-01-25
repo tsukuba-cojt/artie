@@ -48,7 +48,7 @@ const FavoritesCard: React.FC = () => {
 
   return (
     <Stack flexDirection="column" height="100dvh">
-      <Header title="Gallery" />
+      <Header title="Gallery" showBackButton={true} />
       <Stack
         flexDirection="column"
         sx={{
