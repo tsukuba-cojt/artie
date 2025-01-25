@@ -55,57 +55,57 @@ export default function SearchPage() {
   };
 
   return (
-    <Stack flexDirection="column" height="100dvh" px={2} gap={2}>
-      <Header title="Search" showBackButton={false} />
+    <Stack flexDirection="column" height="100dvh" gap={2}>
+      <Stack flexDirection="column" px={2} gap={2}>
+        <Header title="Search" showBackButton={false} />
 
-      <Stack
-        direction="row"
-        p={1.5}
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{
-          borderRadius: "16px",
-          backgroundColor: "rgba(255, 255, 255, 0.80)",
-        }}
-      >
-        <TextField
-          placeholder="作品名"
-          variant="standard"
-          fullWidth
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{
-            disableUnderline: true,
-          }}
+        <Stack
+          direction="row"
+          p={1.5}
+          justifyContent="space-between"
+          alignItems="center"
           sx={{
-            "& .MuiInput-root": {
-              border: "none",
-            },
-          }}
-        />
-        <IconButton
-          id="searchButton"
-          onClick={handleSearch}
-          sx={{
+            borderRadius: "16px",
             backgroundColor: "rgba(255, 255, 255, 0.80)",
-            color: "rgba(255, 255, 255, 0.80)",
-            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.80)" },
           }}
         >
-          <Icon
-            icon="hugeicons:search-02"
-            width={24}
-            height={24}
-            color={theme.palette.accent.main}
+          <TextField
+            placeholder="作品名"
+            variant="standard"
+            fullWidth
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            InputProps={{
+              disableUnderline: true,
+            }}
+            sx={{
+              "& .MuiInput-root": {
+                border: "none",
+              },
+            }}
           />
-        </IconButton>
+          <IconButton
+            id="searchButton"
+            onClick={handleSearch}
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.80)",
+              color: "rgba(255, 255, 255, 0.80)",
+              "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.80)" },
+            }}
+          >
+            <Icon
+              icon="hugeicons:search-02"
+              width={24}
+              height={24}
+              color={theme.palette.accent.main}
+            />
+          </IconButton>
+        </Stack>
       </Stack>
 
       <Box
         sx={{
-          flexGrow: 1,
-          overflowY: "auto",
-          paddingBottom: "113px",
+          height: "calc( 100dvh - 113px - 150px )",
           msOverflowStyle: "none",
           scrollbarWidth: "none",
           "&::-webkit-scrollbar": {
@@ -114,19 +114,28 @@ export default function SearchPage() {
         }}
       >
         {searchQuery.trim() === "" ? (
-          <Stack direction="column" gap={2}>
-            <Stack gap={1} direction="column">
-              <Typography variant="h6">
+          <Stack direction="column" gap={2} height="100%">
+            <Stack
+              gap={1}
+              direction="column"
+              height="50%"
+              width="100vw"
+              sx={{
+                overflow: "hidden",
+              }}
+            >
+              <Typography variant="h6" ml={2}>
                 <strong>検索履歴</strong>
               </Typography>
-              <Box
+              <Stack
+                flexDirection="row"
                 id="searchHistory"
                 sx={{
                   overflowX: "auto",
+                  overflowY: "hidden",
                   whiteSpace: "nowrap",
-                  display: "flex",
                   gap: 2,
-                  height: "300px",
+                  paddingX: 2,
                   msOverflowStyle: "none",
                   scrollbarWidth: "none",
                   "&::-webkit-scrollbar": {
@@ -143,21 +152,30 @@ export default function SearchPage() {
                     workId={item.id}
                   />
                 ))}
-              </Box>
+              </Stack>
             </Stack>
 
-            <Stack gap={1} direction="column">
-              <Typography variant="h6">
+            <Stack
+              gap={1}
+              direction="column"
+              height="50%"
+              width="100vw"
+              sx={{
+                overflow: "hidden",
+              }}
+            >
+              <Typography variant="h6" ml={2}>
                 <strong>よく検索される作品</strong>
               </Typography>
-              <Box
-                id="searchPopular"
+              <Stack
+                flexDirection="row"
+                id="searchHistory"
                 sx={{
                   overflowX: "auto",
                   whiteSpace: "nowrap",
-                  display: "flex",
+                  height: "100%",
                   gap: 2,
-                  height: "300px",
+                  paddingX: 2,
                   msOverflowStyle: "none",
                   scrollbarWidth: "none",
                   "&::-webkit-scrollbar": {
@@ -174,7 +192,7 @@ export default function SearchPage() {
                     workId={item.id}
                   />
                 ))}
-              </Box>
+              </Stack>
             </Stack>
           </Stack>
         ) : searching ? (

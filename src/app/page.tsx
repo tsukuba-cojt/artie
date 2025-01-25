@@ -1,81 +1,41 @@
 "use client";
 
-import React from "react";
-import { Box, Typography, Grid } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import React, { useState } from "react";
+import { IconButton, Stack } from "@mui/material";
+import Header from "@/features/base/components/header";
+import ProfileCard from "@/features/home/components/ProfileCard";
+import Sidebar from "@/features/home/components/Sidebar";
+import { Icon } from "@iconify/react";
+import PickUpWork from "@/features/home/components/PickUpWork";
+import { theme } from "./thema";
 
 export default function Home() {
-  const theme = useTheme();
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const colors = [
-    {
-      name: "Primary",
-      palette: theme.palette.primary,
-    },
-    {
-      name: "Secondary",
-      palette: theme.palette.secondary,
-    },
-    {
-      name: "Accent",
-      palette: theme.palette.accent,
-    },
-    {
-      name: "Background Default",
-      palette: { main: theme.palette.background.default },
-    },
-    {
-      name: "Background Paper",
-      palette: { main: theme.palette.background.paper },
-    },
-    {
-      name: "Text Primary",
-      palette: { main: theme.palette.text.primary },
-    },
-    {
-      name: "Text Secondary",
-      palette: { main: theme.palette.text.secondary },
-    },
-    {
-      name: "Text Disabled",
-      palette: { main: theme.palette.text.disabled },
-    },
-    {
-      name: "Common Black",
-      palette: { main: theme.palette.common.black },
-    },
-    {
-      name: "Common White",
-      palette: { main: theme.palette.common.white },
-    },
-  ];
+  const toggleSidebar = () => {
+    setSidebarOpen((prev) => !prev);
+  };
 
   return (
-    <Box sx={{ padding: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Theme Colors
-      </Typography>
-      <Grid container spacing={2}>
-        {colors.map((color) => (
-          <Grid item xs={12} sm={6} md={4} key={color.name}>
-            <Box
-              sx={{
-                backgroundColor: color.palette.main,
-                color: theme.palette.text.primary,
-                padding: 2,
-                borderRadius: 1,
-                border: "1px solid #ccc",
-              }}
-            >
-              <Typography variant="subtitle1">{color.name}</Typography>
-              <Typography variant="body2">
-                Main: {color.palette.main}
-              </Typography>
-            </Box>
-            <Box color="primary.main">てすと</Box>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+    <>
+      <Stack flexDirection="column" height="100dvh" px={2} gap={2}>
+        <Header
+          title="Home"
+          rightReactNode={
+            <IconButton onClick={toggleSidebar} aria-label="open sidebar">
+              <Icon
+                icon="mdi:settings-outline"
+                width="30"
+                height="30"
+                color={theme.palette.grey[700]}
+              />
+            </IconButton>
+          }
+        />
+        <ProfileCard />
+        <PickUpWork />
+      </Stack>
+      <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+    </>
   );
 }

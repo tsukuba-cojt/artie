@@ -5,12 +5,12 @@ export const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#F9F6D3", // メインカラー
+      main: "#F9F6D3",
       light: "#ffffff",
       dark: "#c6c3a6",
     },
     secondary: {
-      main: "#6B581A", // サブカラー
+      main: "#6B581A",
       light: "#9e853e",
       dark: "#483a0e",
     },
