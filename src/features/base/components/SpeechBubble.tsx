@@ -14,7 +14,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
   content,
   isRight = true,
   bubbleColor = isRight ? "common.white" : "accent.main",
-  textColor = isRight ? "text.primary" : "accent.main",
+  textColor = isRight ? "text.primary" : "text.secondary",
 }) => {
   return (
     <Box
