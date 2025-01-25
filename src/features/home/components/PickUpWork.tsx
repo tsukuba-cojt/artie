@@ -67,9 +67,11 @@ const PickUpWork: React.FC = () => {
 
   return (
     <Stack flexDirection="column" gap={1}>
-      <Typography variant="h6" width="100%">
-        <strong>今日のイチオシ⭐️</strong>
-      </Typography>
+      <Box px={2}>
+        <Typography variant="h6" width="100%">
+          <strong>今日のイチオシ⭐️</strong>
+        </Typography>
+      </Box>
       <Stack
         flexDirection="column"
         sx={{
@@ -81,6 +83,7 @@ const PickUpWork: React.FC = () => {
         gap={0.5}
       >
         <Box
+          px={2}
           sx={{
             position: "relative",
             borderRadius: "16px",
@@ -125,7 +128,7 @@ const PickUpWork: React.FC = () => {
 
         <Stack flexDirection="row">
           {/* 吹き出し部分 */}
-          <Box sx={{ width: "calc(100% - 130px)" }}>
+          <Box sx={{ width: "calc(100% - 130px)" }} pl={2}>
             <SpeechBubble
               content={comment}
               textColor="text.secondary"
@@ -135,8 +138,8 @@ const PickUpWork: React.FC = () => {
           <Box
             sx={{
               position: "absolute",
-              bottom: -10,
-              right: -15,
+              bottom: 0,
+              right: 0,
             }}
           >
             <Image

@@ -25,7 +25,6 @@ const ArtBox: React.FC<ArtBoxProps> = ({
 
   const handleDetail = () => {
     addHistory({ id: workId, title, imageUrl });
-    console.log(workId);
     router.push(`/works/${workId}`);
   };
 

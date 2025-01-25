@@ -54,6 +54,7 @@ const ProfileCard: React.FC = () => {
       direction={"row"}
       justifyContent={"space-between"}
       alignItems={"center"}
+      px={2}
     >
       <Stack direction={"column"} gap={0}>
         <Typography variant="h6">
