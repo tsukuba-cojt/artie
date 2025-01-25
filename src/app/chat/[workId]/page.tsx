@@ -144,8 +144,8 @@ const ChatPage = () => {
         sx={{
           flex: 1,
           overflowY: "auto",
-          padding: 3,
-          paddingBottom: "200px", // Ensure space for fixed input and buttons
+          padding: 2,
+          paddingBottom: "160px",
         }}
       >
         {loading ? (

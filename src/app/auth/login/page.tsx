@@ -4,6 +4,8 @@ import Header from "@/features/base/components/header";
 import { signInWithGoogle } from "@/lib/supabase/auth";
 import Image from "next/image";
 import { Box, Stack, Typography } from "@mui/material";
+import { ShowArtieModel } from "@prisma/client";
+import { getArtieImageUrl } from "@/lib/getArtieImageUrl";
 
 export default function LoginPage() {
   return (
@@ -29,7 +31,7 @@ export default function LoginPage() {
           }}
         >
           <Image
-            src="/images/default_artie.png"
+            src={getArtieImageUrl(ShowArtieModel.DEFAULT)}
             alt="artieちゃん"
             fill
             style={{
