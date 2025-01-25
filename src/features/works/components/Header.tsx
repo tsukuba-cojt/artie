@@ -42,6 +42,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     fetchFavoriteStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // お気に入りの追加・解除を行う関数

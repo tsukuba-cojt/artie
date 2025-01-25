@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ["www.google.com"], // 必要なホスト名を追加
+  },
 };
 
 export default nextConfig;

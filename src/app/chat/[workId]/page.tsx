@@ -203,7 +203,7 @@ const ChatPage = () => {
                 >
                   <SpeechBubble
                     content={msg.message}
-                    sender={msg.sender === "user"}
+                    isRight={msg.sender === "user"}
                   />
                 </Box>
               </Box>
