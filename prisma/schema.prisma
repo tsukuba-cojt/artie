@@ -31,20 +31,21 @@ model Author {
 }
 
 model Work {
-  title           String
-  description     String
-  authorId        String         @db.Uuid
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  funFactComments    String[] @default([])
-  firstComment       String?
-  suggestComments    String[] @default([])
+  title               String
+  description         String
+  authorId            String         @db.Uuid
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  id                  String         @id
+  imageUrl            String?
   descriptionAudioUrl String?
-  id              String         @id
-  imageUrl        String?
-  conversations   Conversation[]
-  author          Author         @relation(fields: [authorId], references: [id])
-  workFavoritedBy WorkFavorite[]
+  firstComment        String?
+  funFactComments     String[]       @default([])
+  suggestComments     String[]       @default([])
+  conversations       Conversation[]
+  author              Author         @relation(fields: [authorId], references: [id])
+  workFavoritedBy     WorkFavorite[]
+  pickUpWorks     PickUpWork[] 
 
   @@index([authorId])
 }
@@ -76,7 +77,29 @@ model WorkFavorite {
   @@index([workId])
 }
 
+model PickUpWork {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workId         String         
+  comment        String
+  showArtieModel ShowArtieModel
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  work           Work           @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([workId])
+}
+
 enum Sender {
   USER
   AI
+}
+
+enum ShowArtieModel {
+  PAINTING
+  DEFAULT
+  ANGRY
+  RUSHING
+  SURPRISE
+  TIRED
+  UMM
 }

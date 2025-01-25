@@ -196,6 +196,7 @@ const ChatPage = () => {
                   />
                 )}
                 <Box
+<<<<<<< Updated upstream
                   sx={{
                     alignSelf:
                       msg.sender === "user" ? "flex-end" : "flex-start",
@@ -222,6 +223,20 @@ const ChatPage = () => {
               </Box>
             )}
           </>
+=======
+                  component="img"
+                  src="/images/profile_artie.png"
+                  alt="Profile Image"
+                  sx={{ width: 150, height: 150, borderRadius: "50%" }}
+                />
+              )}
+              <SpeechBubble
+                content={msg.message}
+                isRight={msg.sender === "USER"}
+              />
+            </Box>
+          ))
+>>>>>>> Stashed changes
         )}
       </Box>
 
