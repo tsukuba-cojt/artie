@@ -8,6 +8,7 @@ import Sidebar from "@/features/home/components/Sidebar";
 import { Icon } from "@iconify/react";
 import PickUpWork from "@/features/home/components/PickUpWork";
 import { theme } from "./thema";
+import FavoritesCard from "@/features/home/components/FavoritesCard";
 
 export default function Home() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function Home() {
 
   return (
     <>
-      <Stack flexDirection="column" height="100dvh" px={2} gap={2}>
+      <Stack flexDirection="column" height="100dvh">
         <Header
           title="Home"
           rightReactNode={
@@ -32,8 +33,19 @@ export default function Home() {
             </IconButton>
           }
         />
-        <ProfileCard />
-        <PickUpWork />
+        <Stack
+          flexDirection="column"
+          sx={{
+            overflowX: "auto",
+          }}
+          width="100%"
+          gap={2}
+          pb="113px"
+        >
+          <ProfileCard />
+          <PickUpWork />
+          <FavoritesCard />
+        </Stack>
       </Stack>
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
     </>
