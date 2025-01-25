@@ -7,6 +7,7 @@ import ProfileCard from "@/features/home/components/ProfileCard";
 import Sidebar from "@/features/home/components/Sidebar";
 import { Icon } from "@iconify/react";
 import { theme } from "../thema";
+import PickUpWork from "@/features/home/components/PickUpWork";
 
 export default function Home() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function Home() {
 
   return (
     <>
-      <Stack flexDirection="column" height="100vh" px={2} gap={2}>
+      <Stack flexDirection="column" height="100dvh" px={2} gap={2}>
         <Header
           title="Home"
           rightReactNode={
@@ -32,6 +33,7 @@ export default function Home() {
           }
         />
         <ProfileCard />
+        <PickUpWork />
       </Stack>
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
     </>

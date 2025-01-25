@@ -12,7 +12,8 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
 
-  const shouldShowNavigationBar = !pathname.startsWith("/auth");
+  const shouldShowNavigationBar =
+    !pathname.startsWith("/auth") && !pathname.startsWith("/chat/");
 
   return (
     <html lang="en">
@@ -20,7 +21,7 @@ export default function RootLayout({
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {shouldShowNavigationBar && <NavigationBar />}
-          <Box sx={{ height: "100vh", width: "100vw" }}>{children}</Box>
+          <Box sx={{ height: "100dvh", width: "100vw" }}>{children}</Box>
         </ThemeProvider>
       </body>
     </html>

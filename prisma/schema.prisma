@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,33 +8,98 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid // UUIDとして自動生成
-  name      String                         // ユーザー名
-  email     String   @unique               // ユニークなメールアドレス
-  imageUrl  String?                        // 画像URL (任意フィールド)
-  createdAt DateTime @default(now())       // 作成日時
-  updatedAt DateTime @updatedAt            // 更新日時
+  name          String
+  imageUrl      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  conversations Conversation[]
+  workFavorites WorkFavorite[]
 }
 
 model Author {
-  id        String   @id @default(uuid()) @db.Uuid // UUID 型に指定
-  name      String
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  era         String
+  birthplace  String
+  keywords    String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   description String
-  era       String
-  birthplace String
-  keywords  String[]
-  works     Work[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  works       Work[]
 }
 
 model Work {
-  id        String   @id
-  title     String
-  description String
-  imageUrl    String?
-  author    Author   @relation(fields: [authorId], references: [id])
-  authorId  String   @db.Uuid
+  title               String
+  description         String
+  authorId            String         @db.Uuid
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  id                  String         @id
+  imageUrl            String?
+  descriptionAudioUrl String?
+  firstComment        String?
+  funFactComments     String[]       @default([])
+  suggestComments     String[]       @default([])
+  conversations       Conversation[]
+  author              Author         @relation(fields: [authorId], references: [id])
+  workFavoritedBy     WorkFavorite[]
+  pickUpWorks     PickUpWork[] 
+
+  @@index([authorId])
+}
+
+model Conversation {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  workId    String
+  sender    Sender   @default(USER)
+  message   String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([workId])
+  @@index([createdAt])
+}
+
+model WorkFavorite {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  workId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workId])
+  @@index([workId])
+}
+
+model PickUpWork {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workId         String         
+  comment        String
+  showArtieModel ShowArtieModel
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  work           Work           @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([workId])
+}
+
+enum Sender {
+  USER
+  AI
+}
+
+enum ShowArtieModel {
+  PAINTING
+  DEFAULT
+  ANGRY
+  RUSHING
+  SURPRISE
+  TIRED
+  UMM
 }

@@ -133,7 +133,7 @@ export default function Scan() {
       sx={{
         position: "relative",
         width: "100vw",
-        height: "100vh",
+        height: "100dvh",
         backgroundColor: "black",
       }}
     >
@@ -143,16 +143,20 @@ export default function Scan() {
         style={{
           display: isVideoVisible ? "block" : "none",
           width: "100vw",
-          height: "100vh",
+          height: "100dvh",
           objectFit: "cover",
         }}
+        playsInline
+        autoPlay
+        muted
+        controls={false}
       />
       <canvas
         ref={canvasRef}
         style={{
           display: isVideoVisible ? "none" : "block",
           width: "100vw",
-          height: "100vh",
+          height: "100dvh",
           objectFit: "cover",
         }}
       />
