@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Typography, IconButton, Stack } from "@mui/material";
-import { Icon } from "@iconify/react";
-import { theme } from "@/app/thema";
+import { Stack } from "@mui/material";
 import ArtBox from "@/features/base/components/ArtBox";
-import { useRouter } from "next/navigation";
 import Header from "@/features/base/components/header";
 
 interface WorkData {
