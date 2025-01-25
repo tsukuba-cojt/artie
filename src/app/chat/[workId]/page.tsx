@@ -60,8 +60,8 @@ const ChatPage = () => {
                   sender: msg.role,
                   message: msg.content,
                   createdAt: msg.created_at,
-                })
-              )
+                }),
+              ),
             );
           } else {
             setError("Failed to fetch chat history.");
@@ -246,7 +246,7 @@ const ChatPage = () => {
               content={text}
               onSend={handleSendMessage}
             />
-          )
+          ),
         )}
       </Box>
 
