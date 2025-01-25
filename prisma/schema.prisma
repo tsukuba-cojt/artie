@@ -43,9 +43,9 @@ model Work {
   funFactComments     String[]       @default([])
   suggestComments     String[]       @default([])
   conversations       Conversation[]
+  pickUpWorks         PickUpWork[]
   author              Author         @relation(fields: [authorId], references: [id])
   workFavoritedBy     WorkFavorite[]
-  pickUpWorks     PickUpWork[] 
 
   @@index([authorId])
 }
@@ -79,7 +79,7 @@ model WorkFavorite {
 
 model PickUpWork {
   id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workId         String         
+  workId         String
   comment        String
   showArtieModel ShowArtieModel
   createdAt      DateTime       @default(now())
