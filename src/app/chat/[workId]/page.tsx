@@ -7,6 +7,13 @@ import ChatInput from "@/features/chat/components/Input";
 import SpeechBubble from "@/features/base/components/SpeechBubble";
 import Header from "@/features/base/components/header";
 import ClickableSpeechBubble from "@/features/chat/components/SuggestionButton";
+import { createClient } from "@supabase/supabase-js";
+
+// Initialize Supabase Client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 const ChatPage = () => {
   const { workId } = useParams();
@@ -17,6 +24,7 @@ const ChatPage = () => {
   const [messages, setMessages] = useState<
     { sender: string; message: string; createdAt: string }[]
   >([]);
+  const [firstComment, setFirstComment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [sending, setSending] = useState<boolean>(false);
@@ -40,35 +48,50 @@ const ChatPage = () => {
             setError("Failed to fetch work data.");
           }
 
-          // Fetch chat history
-          const historyRes = await fetch(`/api/chat/${workId}/history`, {
-            method: "POST",
-          });
-          const historyData = await historyRes.json();
+          // Fetch chat history from Supabase
+          const { data: chatHistory, error: chatError } = await supabase
+            .from("Conversation")
+            .select("*")
+            .eq("workId", workId)
+            .order("createdAt", { ascending: true });
 
-          console.log("Chat history response:", historyData); // Debugging line
-
-          if (historyRes.ok) {
-            console.log(historyRes);
-            setMessages(
-              historyData.history.map(
-                (msg: {
-                  role: string;
-                  content: string;
-                  created_at: string;
-                }) => ({
-                  sender: msg.role,
-                  message: msg.content,
-                  createdAt: msg.created_at,
-                }),
-              ),
-            );
-          } else {
+          if (chatError) {
+            console.error("Error fetching chat history:", chatError);
             setError("Failed to fetch chat history.");
+          }
+
+          if (!chatHistory || chatHistory.length === 0) {
+            // If no chat history, fetch `firstComment` from Work table
+            const { data: workData, error: workError } = await supabase
+              .from("Work")
+              .select("firstComment")
+              .eq("id", workId)
+              .single();
+
+            if (workError) {
+              console.error("Error fetching firstComment:", workError);
+            } else if (workData && workData.firstComment) {
+              setFirstComment(workData.firstComment);
+            }
+          } else {
+            // If chat history exists, set messages
+            setMessages(
+              chatHistory.map(
+                (msg: {
+                  sender: string;
+                  message: string;
+                  createdAt: string;
+                }) => ({
+                  sender: msg.sender,
+                  message: msg.message,
+                  createdAt: msg.createdAt,
+                })
+              )
+            );
           }
         } catch (err) {
           setError("Failed to fetch data.");
-          console.error(err); // Debugging line
+          console.error(err);
         } finally {
           setLoading(false);
         }
@@ -174,6 +197,29 @@ const ChatPage = () => {
           </Box>
         ) : (
           <>
+            {firstComment && (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  gap: 2,
+                  marginBottom: "10px",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Box
+                  component="img"
+                  src="/images/profile_artie.png"
+                  alt="Profile Image"
+                  sx={{ width: 50, height: 50, borderRadius: "50%" }}
+                />
+                <Box sx={{ alignSelf: "flex-start" }}>
+                  <SpeechBubble content={firstComment} isRight={false} />
+                </Box>
+              </Box>
+            )}
+
             {messages.map((msg, index) => (
               <Box
                 key={index}
@@ -246,7 +292,7 @@ const ChatPage = () => {
               content={text}
               onSend={handleSendMessage}
             />
-          ),
+          )
         )}
       </Box>
 
