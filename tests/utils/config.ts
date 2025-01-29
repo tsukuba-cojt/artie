@@ -30,7 +30,7 @@ function getEnvVar(key: string, defaultValue: string): string {
   const value = process.env[key];
   if (!value) {
     console.warn(
-      `[WARN] 環境変数 "${key}" が設定されていません。デフォルト値 "${defaultValue}" を使用します。`
+      `[WARN] 環境変数 "${key}" が設定されていません。デフォルト値 "${defaultValue}" を使用します。`,
     );
     return defaultValue;
   }

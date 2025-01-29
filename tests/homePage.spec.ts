@@ -2,7 +2,6 @@ import { test, expect, BrowserContext, Page } from "@playwright/test";
 import { performCommonSetup } from "./utils/setup";
 import { BASE_URL } from "./utils/config";
 import { HomePage } from "./pages/homePage/homePage";
-import { register } from "module";
 
 test.describe.serial("ホームページのテスト", () => {
   let context: BrowserContext;
@@ -31,25 +30,25 @@ test.describe.serial("ホームページのテスト", () => {
     await expect(homePage.getUserName()).toHaveText("テストユーザー");
     await expect(homePage.getUserEmail()).toHaveText("testuser@example.com");
     await expect(homePage.getUserProfileImage()).toHaveScreenshot(
-      "user-profile.png"
+      "user-profile.png",
     );
   });
 
   test("今日のイチオシ作品の画像と作品名が正しく表示されることを検証", async () => {
     await expect(homePage.getTodayPickUpWorkImage()).toHaveScreenshot(
-      "today-pickup-work.png"
+      "today-pickup-work.png",
     );
   });
 
   test("今日のイチオシ作品の説明文が正しく表示されることを検証", async () => {
     await expect(homePage.getTodayPickUpWorkComment()).toHaveText(
-      "今日のイチオシの作品はこれ!伝説のバベルの塔が描かれているんだよ！バベルの塔ってなんだろうね！"
+      "今日のイチオシの作品はこれ!伝説のバベルの塔が描かれているんだよ！バベルの塔ってなんだろうね！",
     );
   });
 
   test("今日のイチオシ作品の横のアーティーちゃんの画像が正しく表示されることを検証", async () => {
     await expect(homePage.getTodayPickUpWorkArtieImage()).toHaveScreenshot(
-      "today-pickup-work-artie.png"
+      "today-pickup-work-artie.png",
     );
   });
 
