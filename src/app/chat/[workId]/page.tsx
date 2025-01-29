@@ -239,7 +239,7 @@ const ChatPage = () => {
           gap: 2,
         }}
       >
-        {["豆知識", "誰が描いたの", "いつ書かれたの", "君は誰？"].map(
+        {["この作品の豆知識", "誰が描いたの", "いつ書かれたの", "君は誰？"].map(
           (text) => (
             <ClickableSpeechBubble
               key={text}
