@@ -1,7 +1,7 @@
 import { Page, Locator } from "@playwright/test";
 
 /**
- * 作品カード全体を操作するクラス
+ * 作品カード群を操作するクラス
  */
 export class WorkCards {
   private readonly cardItems: Locator;
