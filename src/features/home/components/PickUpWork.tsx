@@ -103,6 +103,7 @@ const PickUpWork: React.FC = () => {
               borderRadius: "8px",
             }}
             onClick={handleDetail}
+            id="todayPickUpWorkImage"
           />
           <Stack
             direction="column"
@@ -128,7 +129,11 @@ const PickUpWork: React.FC = () => {
 
         <Stack flexDirection="row">
           {/* 吹き出し部分 */}
-          <Box sx={{ width: "calc(100% - 130px)" }} pl={2}>
+          <Box
+            sx={{ width: "calc(100% - 130px)" }}
+            pl={2}
+            className="today-pickup-comment"
+          >
             <SpeechBubble
               content={comment}
               textColor="text.secondary"
@@ -149,6 +154,7 @@ const PickUpWork: React.FC = () => {
               height={202}
               layout="intrinsic"
               objectFit="contain"
+              id="artieImage"
             />
           </Box>
         </Stack>

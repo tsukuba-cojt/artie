@@ -5,10 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // 環境変数を取得し、未設定の場合にデフォルト値を適用
-export const BASE_URL = getEnvVar(
-  "NEXT_PUBLIC_BASE_URL",
-  "http://localhost:3000",
-);
+export const BASE_URL = getEnvVar("BASE_URL", "http://localhost:3000");
 
 // Supabase の環境変数
 export const SUPABASE_URL = getEnvVar("NEXT_PUBLIC_SUPABASE_URL", "");
@@ -33,7 +30,7 @@ function getEnvVar(key: string, defaultValue: string): string {
   const value = process.env[key];
   if (!value) {
     console.warn(
-      `[WARN] 環境変数 "${key}" が設定されていません。デフォルト値 "${defaultValue}" を使用します。`,
+      `[WARN] 環境変数 "${key}" が設定されていません。デフォルト値 "${defaultValue}" を使用します。`
     );
     return defaultValue;
   }

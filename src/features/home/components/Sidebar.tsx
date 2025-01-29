@@ -56,7 +56,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           mb: 2,
         }}
       >
-        <IconButton onClick={onClose} aria-label="close sidebar">
+        <IconButton
+          onClick={onClose}
+          aria-label="close sidebar"
+          className="closeButton"
+        >
           <Icon icon="mdi:close" width="24" />
         </IconButton>
         <Typography variant="body1">
@@ -65,7 +69,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       </Box>
 
       <Box sx={{ flex: 1 }}>
-        <MenuItem>
+        <MenuItem id="aboutPageLinkButton">
           <span>About</span>
           <Icon
             icon="mdi:chevron-right"
@@ -73,7 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             color={theme.palette.accent.main}
           />
         </MenuItem>
-        <MenuItem>
+        <MenuItem id="profilePageLinkButton">
           <span>プロフィール</span>
           <Icon
             icon="mdi:chevron-right"

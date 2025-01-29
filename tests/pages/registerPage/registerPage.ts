@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 
 /**
  * アカウント登録ページ
@@ -6,7 +6,6 @@ import { Page, Locator, expect } from "@playwright/test";
 export class AccountRegistrationPage {
   private readonly page: Page;
 
-  private readonly headerText: Locator;
   private readonly nameInput: Locator;
   private readonly fileUploadButton: Locator;
   private readonly imagePreview: Locator;
@@ -16,7 +15,6 @@ export class AccountRegistrationPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.headerText = page.getByRole("heading", { name: "アカウント作成" });
     this.nameInput = page.locator("#name");
     this.fileUploadButton = page.getByRole("button", {
       name: "ファイルを選択",
@@ -29,65 +27,37 @@ export class AccountRegistrationPage {
   }
 
   /**
-   * ヘッダーが表示されているか検証
+   * 名前入力欄のロケータを返却
    */
-  async verifyHeaderVisible() {
-    await expect(this.headerText).toBeVisible();
+  getNameInput(): Locator {
+    return this.nameInput;
   }
 
   /**
-   * 名前入力欄に文字を入力
+   * 画像アップロードボタンのロケータを返却
    */
-  async fillName(name: string) {
-    await this.nameInput.fill(name);
+  getFileUploadButton(): Locator {
+    return this.fileUploadButton;
   }
 
   /**
-   * 現在の名前入力欄の値を検証
+   * 画像プレビューのロケータを返却
    */
-  async verifyNameValue(expectedName: string) {
-    await expect(this.nameInput).toHaveValue(expectedName);
+  getImagePreview(): Locator {
+    return this.imagePreview;
   }
 
   /**
-   * 画像ファイルをアップロード
+   * アカウント作成ボタンのロケータを返却
    */
-  async uploadImage(filePath: string) {
-    await this.fileUploadButton.setInputFiles(filePath);
+  getCreateAccountButton(): Locator {
+    return this.createAccountButton;
   }
 
   /**
-   * プレビュー画像が表示されているか検証
+   * エラーメッセージのロケータを返却
    */
-  async verifyImagePreviewVisible() {
-    await expect(this.imagePreview).toBeVisible();
-  }
-
-  /**
-   * エラーメッセージのテキストを検証
-   */
-  async verifyErrorMessage(expectedText: string) {
-    await expect(this.errorMessage).toHaveText(expectedText);
-  }
-
-  /**
-   * エラーメッセージが表示されていない（空）ことを検証
-   */
-  async verifyNoErrorMessage() {
-    await expect(this.errorMessage).toBeEmpty();
-  }
-
-  /**
-   * 「アカウント作成」ボタンをクリック
-   */
-  async clickCreateAccountButton() {
-    await this.createAccountButton.click();
-  }
-
-  /**
-   * 指定のURLへのリダイレクトを検証
-   */
-  async verifyRedirectTo(url: string) {
-    await expect(this.page).toHaveURL(url);
+  getErrorMessage(): Locator {
+    return this.errorMessage;
   }
 }
