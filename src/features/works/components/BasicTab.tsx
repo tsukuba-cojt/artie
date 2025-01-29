@@ -3,10 +3,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { Box, Typography, CircularProgress, Button } from "@mui/material";
 import { useParams } from "next/navigation";
+import useUserSettings from "@/features/auth/hooks/useUserSettings";
 
 const BasicTab = () => {
   const { id } = useParams();
-  const [description, setDescription] = useState("");
+  const { settings } = useUserSettings();
+  const [description, setDescription] = useState<string | null>(null);
+  const [descriptionAudioUrl, setDescriptionAudioUrl] = useState<string | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,15 +23,18 @@ const BasicTab = () => {
 
       if (!response.ok) {
         setError(data.error || "データの取得に失敗しました。");
-        setDescription("");
+        setDescription(null);
+        setDescriptionAudioUrl(null);
         return;
       }
 
       setDescription(data.description || "説明がありません。");
+      setDescriptionAudioUrl(data.descriptionAudioUrl || null);
       setError(null);
     } catch {
       setError("予期せぬエラーが発生しました。");
-      setDescription("");
+      setDescription(null);
+      setDescriptionAudioUrl(null);
     } finally {
       setLoading(false);
     }
@@ -37,6 +45,17 @@ const BasicTab = () => {
       fetchWork();
     }
   }, [id, fetchWork]);
+
+  // 音声ガイドの自動再生を制御
+  useEffect(() => {
+    if (settings.autoPlayAudioGuide && descriptionAudioUrl) {
+      const audio = new Audio(descriptionAudioUrl);
+      console.log(descriptionAudioUrl);
+      audio.play().catch((error) => {
+        console.error("音声の再生に失敗しました。", error);
+      });
+    }
+  }, [settings.autoPlayAudioGuide, descriptionAudioUrl]);
 
   if (loading) {
     return (
