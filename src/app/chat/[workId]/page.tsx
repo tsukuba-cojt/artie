@@ -7,13 +7,6 @@ import ChatInput from "@/features/chat/components/Input";
 import SpeechBubble from "@/features/base/components/SpeechBubble";
 import Header from "@/features/base/components/header";
 import ClickableSpeechBubble from "@/features/chat/components/SuggestionButton";
-import { createClient } from "@supabase/supabase-js";
-
-// Initialize Supabase Client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 const ChatPage = () => {
   const { workId } = useParams();
@@ -24,81 +17,84 @@ const ChatPage = () => {
   const [messages, setMessages] = useState<
     { sender: string; message: string; createdAt: string }[]
   >([]);
-  const [firstComment, setFirstComment] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [sending, setSending] = useState<boolean>(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (workId) {
-      const fetchWorkAndMessages = async () => {
-        setLoading(true);
-        try {
-          // Fetch work data
-          const workRes = await fetch(`/api/works?id=${workId}`);
-          const workData = await workRes.json();
-
-          if (workRes.ok) {
-            setWorkData({
-              imageUrl: workData.data.imageUrl || "",
-              title: workData.data.title || "Unknown Title",
-            });
-          } else {
-            setError("Failed to fetch work data.");
-          }
-
-          // Fetch chat history from Supabase
-          const { data: chatHistory, error: chatError } = await supabase
-            .from("Conversation")
-            .select("*")
-            .eq("workId", workId)
-            .order("createdAt", { ascending: true });
-
-          if (chatError) {
-            console.error("Error fetching chat history:", chatError);
-            setError("Failed to fetch chat history.");
-          }
-
-          if (!chatHistory || chatHistory.length === 0) {
-            // If no chat history, fetch `firstComment` from Work table
-            const { data: workData, error: workError } = await supabase
-              .from("Work")
-              .select("firstComment")
-              .eq("id", workId)
-              .single();
-
-            if (workError) {
-              console.error("Error fetching firstComment:", workError);
-            } else if (workData && workData.firstComment) {
-              setFirstComment(workData.firstComment);
-            }
-          } else {
-            // If chat history exists, set messages
-            setMessages(
-              chatHistory.map(
-                (msg: {
-                  sender: string;
-                  message: string;
-                  createdAt: string;
-                }) => ({
-                  sender: msg.sender,
-                  message: msg.message,
-                  createdAt: msg.createdAt,
-                })
-              )
-            );
-          }
-        } catch (err) {
-          setError("Failed to fetch data.");
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchWorkAndMessages();
+    if (!workId) {
+      console.error("workId is undefined!");
+      setError("Invalid work ID.");
+      return;
     }
+
+    const fetchWorkAndMessages = async () => {
+      setLoading(true);
+      try {
+        console.log("Fetching work data from:", `/api/works?id=${workId}`);
+        console.log(
+          "Fetching chat history from:",
+          `/api/chat/${workId}/history`,
+        );
+
+        // Fetch work data
+        const workRes = await fetch(`/api/works?id=${workId}`);
+        const workData = await workRes.json();
+
+        if (workRes.ok) {
+          setWorkData({
+            imageUrl: workData.data?.imageUrl || "",
+            title: workData.data?.title || "Unknown Title",
+          });
+        } else {
+          console.error("Work API Error:", workData);
+          setError("Failed to fetch work data.");
+        }
+
+        // Fetch chat history
+        const historyRes = await fetch(`/api/chat/${workId}/history`, {
+          method: "POST",
+        });
+        const historyText = await historyRes.text();
+        console.log("Raw Chat History Response:", historyText);
+
+        let historyData;
+        try {
+          historyData = JSON.parse(historyText);
+        } catch (err) {
+          console.error("Failed to parse JSON:", err);
+          setError("Invalid chat history response.");
+          return;
+        }
+
+        console.log("Parsed Chat History:", historyData);
+
+        // Assign chat history correctly
+        const chatHistory = historyData.history || historyData.message || [];
+
+        if (!Array.isArray(chatHistory)) {
+          console.error("Invalid history format:", historyData);
+          setError("Invalid chat history response.");
+          return;
+        }
+
+        setMessages(
+          chatHistory.map((msg) => ({
+            sender: msg.sender === "user" ? "user" : "assistant",
+            message: msg.message,
+            createdAt: msg.createdAt,
+          })),
+        );
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Failed to fetch data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWorkAndMessages();
   }, [workId]);
 
   useEffect(() => {
@@ -142,9 +138,11 @@ const ChatPage = () => {
           },
         ]);
       } else {
+        console.error("Chat API Error:", data);
         setError(data.reply || "Failed to send message.");
       }
-    } catch {
+    } catch (err) {
+      console.error("Error sending message:", err);
       setError("An error occurred while sending the message.");
     } finally {
       setSending(false);
@@ -197,29 +195,6 @@ const ChatPage = () => {
           </Box>
         ) : (
           <>
-            {firstComment && (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  gap: 2,
-                  marginBottom: "10px",
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <Box
-                  component="img"
-                  src="/images/profile_artie.png"
-                  alt="Profile Image"
-                  sx={{ width: 50, height: 50, borderRadius: "50%" }}
-                />
-                <Box sx={{ alignSelf: "flex-start" }}>
-                  <SpeechBubble content={firstComment} isRight={false} />
-                </Box>
-              </Box>
-            )}
-
             {messages.map((msg, index) => (
               <Box
                 key={index}
@@ -292,7 +267,7 @@ const ChatPage = () => {
               content={text}
               onSend={handleSendMessage}
             />
-          )
+          ),
         )}
       </Box>
 
