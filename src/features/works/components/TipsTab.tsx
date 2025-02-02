@@ -27,10 +27,10 @@ const TipsTab = () => {
 
       const data = await response.json();
       setFunFacts(
-        Array.isArray(data.funFactComments) ? data.funFactComments : [],
+        Array.isArray(data.funFactComments) ? data.funFactComments : []
       );
       setError(null);
-    } catch (error) {
+    } catch {
       setError("データの取得に失敗しました。");
       setFunFacts([]);
     } finally {
