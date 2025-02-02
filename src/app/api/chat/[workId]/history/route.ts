@@ -1,4 +1,3 @@
-import { LLMMessage } from "@/lib/executeLLM";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -35,7 +34,7 @@ export async function POST(
       );
     }
 
-    let message: { sender: string; message: any; createdAt: any }[];
+    let message: { sender: string; message: string; createdAt: string }[];
 
     if (conversations && conversations.length > 0) {
       message = conversations.map((conv) => ({

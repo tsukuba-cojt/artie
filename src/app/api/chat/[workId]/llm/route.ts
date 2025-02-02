@@ -9,7 +9,7 @@ type RequestBody = {
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ workId: string }> }
+  { params }: { params: Promise<{ workId: string }> },
 ) {
   try {
     const { workId } = await params;
@@ -18,7 +18,7 @@ export async function POST(
     if (typeof inputMessage !== "string" || !Array.isArray(history)) {
       return NextResponse.json(
         { reply: "不正なリクエストです。" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -36,7 +36,7 @@ export async function POST(
       console.error("Workデータ取得エラー:", workError);
       return NextResponse.json(
         { reply: "作品情報の取得に失敗しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -50,7 +50,7 @@ export async function POST(
     if (userError || !userData.user) {
       return NextResponse.json(
         { error: "ユーザー情報の取得に失敗しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -97,7 +97,7 @@ export async function POST(
         workId,
         sender: "AI",
         message: aiReply,
-      }
+      },
     );
 
     // Insert new conversations into Supabase
@@ -108,7 +108,7 @@ export async function POST(
     if (insertError) {
       return NextResponse.json(
         { reply: "会話履歴の保存中にエラーが発生しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -120,12 +120,12 @@ export async function POST(
     if (error instanceof Error) {
       return NextResponse.json(
         { reply: `エラーが発生しました: ${error.message}` },
-        { status: 500 }
+        { status: 500 },
       );
     } else {
       return NextResponse.json(
         { reply: "未知のエラーが発生しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
