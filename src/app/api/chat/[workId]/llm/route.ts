@@ -2,7 +2,6 @@ import { executeLLM, LLMMessage } from "@/lib/executeLLM";
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-// リクエストボディの型定義
 type RequestBody = {
   message: string;
   history: LLMMessage[];
@@ -14,11 +13,8 @@ export async function POST(
 ) {
   try {
     const { workId } = await params;
-
-    // リクエストボディをパース
     const { message: inputMessage, history }: RequestBody = await req.json();
 
-    // バリデーション: 必須フィールドが正しい型であることを確認
     if (typeof inputMessage !== "string" || !Array.isArray(history)) {
       return NextResponse.json(
         { reply: "不正なリクエストです。" },
@@ -58,14 +54,12 @@ export async function POST(
       );
     }
 
-    // LLMを実行してAIの応答を取得
     const aiReply = await executeLLM({
       systemMessage,
       history,
       prompt: inputMessage,
     });
 
-    // 新しいメッセージを会話履歴に追加
     const updatedHistory: LLMMessage[] = [
       ...history,
       {
@@ -80,9 +74,18 @@ export async function POST(
       },
     ];
 
-    // 新しい会話メッセージをSupabaseに挿入
-    // New conversation messages to be inserted
-    const newConversations = [
+    const newConversations = [];
+
+    if (history.length === 1) {
+      newConversations.push({
+        userId: userData.user.id,
+        workId,
+        sender: "AI",
+        message: history[0].content,
+      });
+    }
+
+    newConversations.push(
       {
         userId: userData.user.id,
         workId,
@@ -95,7 +98,7 @@ export async function POST(
         sender: "AI",
         message: aiReply,
       },
-    ];
+    );
 
     // Insert new conversations into Supabase
     const { error: insertError } = await supabase
@@ -103,20 +106,17 @@ export async function POST(
       .insert(newConversations);
 
     if (insertError) {
-      console.error("Supabaseへの会話履歴保存エラー:", insertError);
       return NextResponse.json(
         { reply: "会話履歴の保存中にエラーが発生しました。" },
         { status: 500 },
       );
     }
 
-    // クライアントにAIの応答と更新された会話履歴を返す
     return NextResponse.json({
       reply: aiReply,
       history: updatedHistory,
     });
   } catch (error) {
-    console.error("APIエラー:", error);
     if (error instanceof Error) {
       return NextResponse.json(
         { reply: `エラーが発生しました: ${error.message}` },
