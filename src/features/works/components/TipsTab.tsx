@@ -27,7 +27,7 @@ const TipsTab = () => {
 
       const data = await response.json();
       setFunFacts(
-        Array.isArray(data.funFactComments) ? data.funFactComments : []
+        Array.isArray(data.funFactComments) ? data.funFactComments : [],
       );
       setError(null);
     } catch {
