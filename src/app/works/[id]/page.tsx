@@ -1,3 +1,4 @@
+// pages/works/[id].tsx または適切なパス
 "use client";
 
 import { AboutWorks } from "@/features/works/components/AboutWorks";
@@ -7,6 +8,7 @@ import FloatingActionButton from "@/features/works/components/FloatingChat";
 import { Box, Stack, Typography, CircularProgress } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import FloatingAudioToggle from "@/features/works/components/FloatingAudioToggle";
 
 const WorkPage = () => {
   const { id } = useParams();
@@ -30,7 +32,7 @@ const WorkPage = () => {
             setWorkData({
               title: data.data.title,
               author: data.data.Author.name,
-              imageUrl: data.data.imageUrl || null,
+              imageUrl: data.data.imageUrl || "",
             });
             setError(null);
           } else {
@@ -49,7 +51,7 @@ const WorkPage = () => {
 
   return (
     <Stack sx={{ height: "100%", width: "100%" }}>
-      <Box sx={{ position: "relative", height: "100%,", width: "100%" }}>
+      <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
         {loading ? (
           <Box
             sx={{
@@ -84,7 +86,9 @@ const WorkPage = () => {
               title={workData.title}
               author={workData.author}
             />
+
             <SlidingTabs />
+            <FloatingAudioToggle />
             <FloatingActionButton id={id} />
           </>
         )}

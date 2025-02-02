@@ -5,10 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // 環境変数を取得し、未設定の場合にデフォルト値を適用
-export const BASE_URL = getEnvVar(
-  "NEXT_PUBLIC_BASE_URL",
-  "http://localhost:3000",
-);
+export const BASE_URL = getEnvVar("BASE_URL", "http://localhost:3000");
 
 // Supabase の環境変数
 export const SUPABASE_URL = getEnvVar("NEXT_PUBLIC_SUPABASE_URL", "");

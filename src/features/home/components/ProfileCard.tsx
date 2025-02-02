@@ -35,7 +35,12 @@ const ProfileCard: React.FC = () => {
 
   if (loading) {
     return (
-      <Stack alignItems={"center"} justifyContent={"center"} width={"100%"}>
+      <Stack
+        alignItems={"center"}
+        justifyContent={"center"}
+        width={"100%"}
+        id="profileLoadingIndicator"
+      >
         <CircularProgress sx={{ color: "accent.main" }} />
       </Stack>
     );
@@ -57,10 +62,10 @@ const ProfileCard: React.FC = () => {
       px={2}
     >
       <Stack direction={"column"} gap={0}>
-        <Typography variant="h6">
+        <Typography variant="h6" id="userName">
           <strong>{profile.name}</strong>
         </Typography>
-        <Typography variant="body2" color="grey.500">
+        <Typography variant="body2" color="grey.500" id="userEmail">
           <strong>{profile.email}</strong>
         </Typography>
       </Stack>
@@ -89,6 +94,7 @@ const ProfileCard: React.FC = () => {
               width: "100%",
               objectFit: "cover",
             }}
+            className="user-profile-image"
           />
         ) : (
           // プレースホルダーの内容

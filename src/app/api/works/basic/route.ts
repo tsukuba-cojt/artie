@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   try {
     const { data, error } = await supabase
       .from("Work")
-      .select("description")
+      .select("description, descriptionAudioUrl")
       .eq("id", id)
       .single();
 
@@ -30,7 +30,10 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ description: data.description });
+    return NextResponse.json({
+      description: data.description,
+      descriptionAudioUrl: data.descriptionAudioUrl,
+    });
   } catch {
     return NextResponse.json(
       { error: "An unexpected error occurred" },
