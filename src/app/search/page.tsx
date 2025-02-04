@@ -134,6 +134,7 @@ export default function SearchPage() {
                   overflowX: "auto",
                   overflowY: "hidden",
                   whiteSpace: "nowrap",
+                  height: "100%",
                   gap: 2,
                   paddingX: 2,
                   msOverflowStyle: "none",

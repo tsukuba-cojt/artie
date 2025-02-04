@@ -47,10 +47,11 @@ const ArtBox: React.FC<ArtBoxProps> = ({
         src={imageUrl ?? null}
         alt={title}
         sx={{
-          width: "100%",
           height: "100%",
+          width: "100%",
           objectFit: "cover",
           display: "block",
+          maxWidth: "none",
           flexShrink: 0,
           minWidth: 0,
         }}
