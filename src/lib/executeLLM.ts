@@ -4,8 +4,14 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+export enum LLMRole {
+  SYSTEM = "system",
+  USER = "user",
+  ASSISTANT = "assistant",
+}
+
 export type LLMMessage = {
-  role: "system" | "user" | "assistant";
+  role: LLMRole;
   content: string;
   created_at?: string;
 };
@@ -13,13 +19,11 @@ export type LLMMessage = {
 type LLMInput = {
   systemMessage: string;
   history: LLMMessage[];
-  prompt: string;
 };
 
 export const executeLLM = async ({
   systemMessage,
   history,
-  prompt,
 }: LLMInput): Promise<string> => {
   const MAX_RETRIES = 3;
   let attempt = 0;
@@ -31,16 +35,15 @@ export const executeLLM = async ({
 
       const messages: LLMMessage[] = [
         {
-          role: "system",
+          role: LLMRole.SYSTEM,
           content: systemMessage,
         },
         ...recentHistory.map(
           (msg): LLMMessage => ({
             role: msg.role,
             content: msg.content,
-          }),
+          })
         ),
-        { role: "user", content: prompt },
       ];
 
       const response = await openai.chat.completions.create({

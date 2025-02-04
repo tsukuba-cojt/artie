@@ -1,9 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-export async function POST(
+export async function GET(
   req: Request,
-  { params }: { params: Promise<{ workId: string }> },
+  { params }: { params: Promise<{ workId: string }> }
 ) {
   try {
     const { workId } = await params;
@@ -14,7 +14,7 @@ export async function POST(
     if (userError || !userData.user) {
       return NextResponse.json(
         { error: "ユーザー情報の取得に失敗しました。" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -30,7 +30,7 @@ export async function POST(
     if (fetchError) {
       return NextResponse.json(
         { error: "会話履歴の取得中にエラーが発生しました。" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -52,7 +52,7 @@ export async function POST(
       if (workError) {
         return NextResponse.json(
           { error: "作品情報の取得中にエラーが発生しました。" },
-          { status: 500 },
+          { status: 500 }
         );
       }
 
