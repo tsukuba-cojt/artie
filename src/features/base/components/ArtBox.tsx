@@ -36,6 +36,7 @@ const ArtBox: React.FC<ArtBoxProps> = ({
         borderRadius: "16px",
         width: direction === "column" ? "100%" : "auto",
         height: direction === "column" ? "auto" : "100%",
+        maxHeight: direction === "row" ? "30dvh" : "auto",
         overflow: "hidden",
         flexShrink: 0,
       }}
