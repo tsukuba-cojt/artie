@@ -10,6 +10,7 @@ import {
 import { Icon } from "@iconify/react";
 import { theme } from "@/app/thema";
 import { signOut } from "@/lib/supabase/auth";
+import { useRouter } from "next/navigation";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -30,6 +31,8 @@ const MenuItem = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const router = useRouter();
+
   return (
     <Drawer
       anchor="right"
@@ -77,7 +80,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             color={theme.palette.accent.main}
           />
         </MenuItem>
-        <MenuItem id="profilePageLinkButton">
+        <MenuItem
+          id="profilePageLinkButton"
+          onClick={() => router.push(`/auth/updateProfile/`)}
+        >
           <span>プロフィール</span>
           <Icon
             icon="mdi:chevron-right"
@@ -97,6 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             borderColor: "accent.main",
             color: "accent.main",
           }}
+          onClick={() => router.push(`/auth/deleteAccount/`)}
         >
           アカウント削除
         </Button>

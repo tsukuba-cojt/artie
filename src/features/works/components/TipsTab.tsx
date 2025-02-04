@@ -2,7 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Stack, Button, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Button,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import SpeechBubble from "@/features/base/components/SpeechBubble";
 import { getArtieImageUrl } from "@/lib/getArtieImageUrl";
@@ -12,7 +18,9 @@ import { useParams } from "next/navigation";
 const TipsTab = () => {
   const { id } = useParams();
   const router = useRouter();
-  const [funFacts, setFunFacts] = useState<string[]>([]);
+  const [funFacts, setFunFacts] = useState<
+    { fuctComment: string; showArtieModel: ShowArtieModel }[]
+  >([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -26,9 +34,7 @@ const TipsTab = () => {
       }
 
       const data = await response.json();
-      setFunFacts(
-        Array.isArray(data.funFactComments) ? data.funFactComments : [],
-      );
+      setFunFacts(data.data);
       setError(null);
     } catch {
       setError("データの取得に失敗しました。");
@@ -44,9 +50,9 @@ const TipsTab = () => {
     }
   }, [id, fetchFunFacts]);
 
-  const handleChatNavigation = () => {
+  const handleChatNavigation = (message: string) => {
     if (id) {
-      router.push(`/chat/${id}`);
+      router.push(`/chat/${id}?message=${message}`);
     }
   };
 
@@ -66,10 +72,11 @@ const TipsTab = () => {
 
   if (error) {
     return (
-      <Box display="flex" flexDirection="column" gap={2} p={2} mb="111px">
+      <Box display="flex" flexDirection="column" gap={2} p={2}>
+        <Typography sx={{ color: "accent.main" }}>{error}</Typography>
         <Button
           variant="outlined"
-          sx={{ color: "accent.main" }}
+          sx={{ color: "accent.main", borderColor: "accent.main" }}
           onClick={fetchFunFacts}
         >
           再試行
@@ -80,7 +87,7 @@ const TipsTab = () => {
 
   return (
     <Stack spacing={2} paddingTop="0px" pb="100px">
-      {funFacts.length > 0 ? (
+      {funFacts.length > 0 &&
         funFacts.map((fact, index) => (
           <Box
             key={index}
@@ -91,8 +98,8 @@ const TipsTab = () => {
           >
             <Box
               sx={{
-                width: 120,
-                height: 180,
+                width: 100,
+                height: 170,
                 flexShrink: 0,
                 display: "flex",
                 alignItems: "center",
@@ -100,17 +107,17 @@ const TipsTab = () => {
               }}
             >
               <Image
-                src={getArtieImageUrl(ShowArtieModel.DEFAULT)}
+                src={getArtieImageUrl(fact.showArtieModel)}
                 alt="Artie"
                 width={120}
-                height={180}
+                height={200}
                 style={{ objectFit: "contain" }}
               />
             </Box>
             <Stack flexDirection="column" gap={1}>
-              <SpeechBubble content={fact} isRight={false} />
+              <SpeechBubble content={fact.fuctComment} isRight={false} />
               <Button
-                onClick={handleChatNavigation}
+                onClick={() => handleChatNavigation(fact.fuctComment)}
                 sx={{
                   backgroundColor: "common.white",
                   color: "accent.main",
@@ -123,44 +130,7 @@ const TipsTab = () => {
               </Button>
             </Stack>
           </Box>
-        ))
-      ) : (
-        <Box display="flex" alignItems="center" gap={2}>
-          <Box
-            sx={{
-              width: 120,
-              height: 180,
-              flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image
-              src={getArtieImageUrl(ShowArtieModel.DEFAULT)}
-              alt="Artie"
-              width={120}
-              height={180}
-              style={{ objectFit: "contain" }}
-            />
-          </Box>
-          <Stack flexDirection="column" gap={1}>
-            <SpeechBubble content="Fun fact not available" isRight={false} />
-            <Button
-              onClick={handleChatNavigation}
-              sx={{
-                backgroundColor: "common.white",
-                color: "accent.main",
-                borderRadius: "10px",
-                width: "160px",
-                boxShadow: "2px 2px 6px rgba(0, 0, 0, 0.2)",
-              }}
-            >
-              <strong>チャットしてみる</strong>
-            </Button>
-          </Stack>
-        </Box>
-      )}
+        ))}
     </Stack>
   );
 };

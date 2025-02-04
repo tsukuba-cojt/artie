@@ -47,7 +47,7 @@ const ArtBox: React.FC<ArtBoxProps> = ({
         alt={title}
         sx={{
           width: "100%",
-          height: "100%",
+          height: direction === "column" ? "auto" : "100%",
           objectFit: "cover",
           display: "block",
         }}

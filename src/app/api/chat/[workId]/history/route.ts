@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
+import { LLMMessage, LLMRole } from "@/types/LLMType";
 import { NextResponse } from "next/server";
 
-export async function POST(
+export async function GET(
   req: Request,
   { params }: { params: Promise<{ workId: string }> },
 ) {
@@ -34,13 +35,13 @@ export async function POST(
       );
     }
 
-    let message: { sender: string; message: string; createdAt: string }[];
+    let message: LLMMessage[];
 
     if (conversations && conversations.length > 0) {
       message = conversations.map((conv) => ({
-        sender: conv.sender === "USER" ? "user" : "assistant",
-        message: conv.message,
-        createdAt: conv.createdAt,
+        role: conv.sender,
+        content: conv.message,
+        created_at: conv.createdAt,
       }));
     } else {
       const { data: workData, error: workError } = await supabase
@@ -59,9 +60,9 @@ export async function POST(
       if (workData?.firstComment) {
         message = [
           {
-            sender: "AI",
-            message: workData.firstComment,
-            createdAt: new Date().toISOString(),
+            role: LLMRole.ASSISTANT,
+            content: workData.firstComment,
+            created_at: new Date().toISOString(),
           },
         ];
       } else {
@@ -69,7 +70,7 @@ export async function POST(
       }
     }
 
-    return NextResponse.json({ message });
+    return NextResponse.json({ data: message });
   } catch (error) {
     const errorMessage =
       error instanceof Error

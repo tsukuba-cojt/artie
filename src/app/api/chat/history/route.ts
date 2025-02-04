@@ -16,6 +16,7 @@ export async function GET(_req: NextRequest) {
 
     const userId = userData.user.id;
 
+    // TODO: 全てのconversationを取得して、ここでバックエンドでフィルタリングをしている。workそれぞれにつき1件のconversationしか取得しない形にしたい。
     const { data, error } = await supabase
       .from("Conversation")
       .select(
@@ -31,7 +32,7 @@ export async function GET(_req: NextRequest) {
         `,
       )
       .eq("userId", userId)
-      .eq("sender", "AI")
+      .eq("sender", "assistant")
       .order("workId", { ascending: true })
       .order("createdAt", { ascending: false });
 

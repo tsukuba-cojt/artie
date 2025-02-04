@@ -125,7 +125,7 @@ export default function SearchPage() {
               }}
             >
               <Typography variant="h6" ml={2}>
-                <strong>検索履歴</strong>
+                <strong>閲覧履歴</strong>
               </Typography>
               <Stack
                 flexDirection="row"

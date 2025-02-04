@@ -1,30 +1,31 @@
 "use client";
 
 import { Box, Stack, Typography, CircularProgress } from "@mui/material";
-import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ChatInput from "@/features/chat/components/Input";
 import SpeechBubble from "@/features/base/components/SpeechBubble";
 import Header from "@/features/base/components/header";
 import ClickableSpeechBubble from "@/features/chat/components/SuggestionButton";
+import { LLMMessage, LLMRole } from "@/types/LLMType";
 
 const ChatPage = () => {
   const { workId } = useParams();
+  const workIdStr = workId as string;
+
   const [workData, setWorkData] = useState({
     imageUrl: "",
     title: "",
   });
-  const [messages, setMessages] = useState<
-    { sender: string; message: string; createdAt: string }[]
-  >([]);
+
+  const [messages, setMessages] = useState<LLMMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [sending, setSending] = useState<boolean>(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!workId) {
-      console.error("workId is undefined!");
+    if (!workIdStr) {
       setError("Invalid work ID.");
       return;
     }
@@ -32,15 +33,13 @@ const ChatPage = () => {
     const fetchWorkAndMessages = async () => {
       setLoading(true);
       try {
-        console.log("Fetching work data from:", `/api/works?id=${workId}`);
-        console.log(
-          "Fetching chat history from:",
-          `/api/chat/${workId}/history`,
-        );
+        const [workRes, historyRes] = await Promise.all([
+          fetch(`/api/works?id=${workIdStr}`),
+          fetch(`/api/chat/${workIdStr}/history`),
+        ]);
 
-        // Fetch work data
-        const workRes = await fetch(`/api/works?id=${workId}`);
         const workData = await workRes.json();
+        const historyData = await historyRes.json();
 
         if (workRes.ok) {
           setWorkData({
@@ -48,54 +47,24 @@ const ChatPage = () => {
             title: workData.data?.title || "Unknown Title",
           });
         } else {
-          console.error("Work API Error:", workData);
-          setError("Failed to fetch work data.");
+          setError("作品情報の取得に失敗しました");
         }
 
-        // Fetch chat history
-        const historyRes = await fetch(`/api/chat/${workId}/history`, {
-          method: "POST",
-        });
-        const historyText = await historyRes.text();
-        console.log("Raw Chat History Response:", historyText);
-
-        let historyData;
-        try {
-          historyData = JSON.parse(historyText);
-        } catch (err) {
-          console.error("Failed to parse JSON:", err);
-          setError("Invalid chat history response.");
+        if (!historyRes.ok || !Array.isArray(historyData.data)) {
+          setError("チャット履歴の取得に失敗しました");
           return;
         }
 
-        console.log("Parsed Chat History:", historyData);
-
-        // Assign chat history correctly
-        const chatHistory = historyData.history || historyData.message || [];
-
-        if (!Array.isArray(chatHistory)) {
-          console.error("Invalid history format:", historyData);
-          setError("Invalid chat history response.");
-          return;
-        }
-
-        setMessages(
-          chatHistory.map((msg) => ({
-            sender: msg.sender === "user" ? "user" : "assistant",
-            message: msg.message,
-            createdAt: msg.createdAt,
-          })),
-        );
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Failed to fetch data.");
+        setMessages(historyData.data);
+      } catch {
+        setError("予期せぬエラーが発生しました");
       } finally {
         setLoading(false);
       }
     };
 
     fetchWorkAndMessages();
-  }, [workId]);
+  }, [workIdStr]);
 
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -110,17 +79,26 @@ const ChatPage = () => {
     setSending(true);
 
     try {
-      const res = await fetch(`/api/chat/${workId}/llm`, {
+      const newMessage: LLMMessage = {
+        role: LLMRole.USER,
+        content: message,
+        created_at: new Date().toISOString(),
+      };
+
+      // TODO: もっと綺麗に書く。messages.lenght === 1なら、artieちゃんからの初回メッセージを履歴に含める必要があるから、追加してる感じ。
+      const newMessages =
+        messages.length === 1 ? [{ ...messages[0] }, newMessage] : [newMessage];
+
+      const res = await fetch(`/api/chat/${workIdStr}/llm`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message,
-          context: workData.title || "Unknown Title",
+          newMessages: newMessages,
           history: messages.map((msg) => ({
-            role: msg.sender === "user" ? "user" : "assistant",
-            content: msg.message,
+            role: msg.role,
+            content: msg.content,
           })),
         }),
       });
@@ -130,29 +108,89 @@ const ChatPage = () => {
       if (res.ok) {
         setMessages((prev) => [
           ...prev,
-          { sender: "user", message, createdAt: new Date().toISOString() },
+          newMessage,
           {
-            sender: "AI",
-            message: data.reply,
-            createdAt: new Date().toISOString(),
+            role: LLMRole.ASSISTANT,
+            content: data.reply,
+            created_at: new Date().toISOString(),
           },
         ]);
       } else {
-        console.error("Chat API Error:", data);
-        setError(data.reply || "Failed to send message.");
+        setError(data.reply || "artieちゃんの調子が悪いようです...");
       }
-    } catch (err) {
-      console.error("Error sending message:", err);
-      setError("An error occurred while sending the message.");
+    } catch {
+      setError("artieちゃんの調子が悪いようです...");
     } finally {
       setSending(false);
     }
   };
 
+  const searchParams = useSearchParams();
+  const queryMessage = searchParams.get("message");
+
+  const [hasFetched, setHasFetched] = useState<boolean>(false);
+
+  // TODO: 二回発火される問題の根本的な解決。現在は対症療法的な解決になってる。純粋関数になっていないことが原因だと思われる。
+  const fetchInitialMessage = useCallback(async () => {
+    if (!queryMessage || hasFetched) return;
+    setHasFetched(true);
+
+    const newMessages: LLMMessage[] = [
+      {
+        role: LLMRole.ASSISTANT,
+        content: queryMessage,
+        created_at: new Date().toISOString(),
+      },
+      {
+        role: LLMRole.USER,
+        content: "もっと教えて",
+        created_at: new Date().toISOString(),
+      },
+    ];
+
+    try {
+      const res = await fetch(`/api/chat/${workIdStr}/llm`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newMessages: newMessages,
+          history: messages.map((msg) => ({
+            role: msg.role,
+            content: msg.content,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessages((prev) => [
+          ...prev,
+          ...newMessages,
+          {
+            role: LLMRole.ASSISTANT,
+            content: data.reply,
+            created_at: new Date().toISOString(),
+          },
+        ]);
+      } else {
+        setError(data.reply || "artieちゃんの調子が悪いようです...");
+      }
+    } catch {
+      setError("artieちゃんの調子が悪いようです...");
+    }
+  }, [queryMessage, workIdStr, hasFetched, messages]);
+
+  useEffect(() => {
+    fetchInitialMessage();
+  }, [fetchInitialMessage]);
+
   return (
     <Stack
       sx={{
-        height: "100vh",
+        height: "100dvh",
         width: "100%",
         justifyContent: "space-between",
         overflow: "hidden",
@@ -203,12 +241,13 @@ const ChatPage = () => {
                   alignItems: "flex-end",
                   gap: 2,
                   marginBottom: "10px",
-                  flexDirection: msg.sender === "user" ? "row-reverse" : "row",
+                  flexDirection:
+                    msg.role === LLMRole.USER ? "row-reverse" : "row",
                   justifyContent:
-                    msg.sender === "user" ? "flex-start" : "flex-end",
+                    msg.role === LLMRole.USER ? "flex-start" : "flex-end",
                 }}
               >
-                {msg.sender !== "user" && (
+                {msg.role !== LLMRole.USER && (
                   <Box
                     component="img"
                     src="/images/profile_artie.png"
@@ -219,12 +258,12 @@ const ChatPage = () => {
                 <Box
                   sx={{
                     alignSelf:
-                      msg.sender === "user" ? "flex-end" : "flex-start",
+                      msg.role === LLMRole.USER ? "flex-end" : "flex-start",
                   }}
                 >
                   <SpeechBubble
-                    content={msg.message}
-                    isRight={msg.sender === "user"}
+                    content={msg.content}
+                    isRight={msg.role === LLMRole.USER}
                   />
                 </Box>
               </Box>

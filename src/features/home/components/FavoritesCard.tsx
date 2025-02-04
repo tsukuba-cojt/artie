@@ -96,7 +96,7 @@ const FavoritesCard: React.FC = () => {
                   width: "100%",
                   height: "100%",
                   backgroundColor: placeholder,
-                  borderRadius: "8px 0 0 8px",
+                  borderRadius: "8px 0 0 0",
                 }}
               />
             )}
@@ -170,7 +170,7 @@ const FavoritesCard: React.FC = () => {
                     width: "100%",
                     height: "100%",
                     backgroundColor: placeholder,
-                    borderRadius: "0 0 8px 0",
+                    borderRadius: "0",
                   }}
                 />
               )}

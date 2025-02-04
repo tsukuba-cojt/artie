@@ -40,7 +40,7 @@ model Work {
   imageUrl            String?
   descriptionAudioUrl String?
   firstComment        String?
-  funFactComments     String[]       @default([])
+  funFactComments     FunFactComment[] @relation("WorkToFunFact")
   suggestComments     String[]       @default([])
   conversations       Conversation[]
   pickUpWorks         PickUpWork[]
@@ -54,7 +54,7 @@ model Conversation {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String   @db.Uuid
   workId    String
-  sender    Sender   @default(USER)
+  sender    Sender   @default(user)
   message   String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -90,8 +90,8 @@ model PickUpWork {
 }
 
 enum Sender {
-  USER
-  AI
+  user
+  assistant
 }
 
 enum ShowArtieModel {
@@ -102,4 +102,15 @@ enum ShowArtieModel {
   SURPRISE
   TIRED
   UMM
+}
+
+model FunFactComment {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fuctComment String
+  showArtieModel ShowArtieModel
+  workId      String
+  createdAt   DateTime @default(now())
+  work        Work     @relation("WorkToFunFact", fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([workId])
 }
