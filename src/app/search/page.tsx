@@ -118,7 +118,8 @@ export default function SearchPage() {
             <Stack
               gap={1}
               direction="column"
-              height="50%"
+              height="30dvh"
+              // height="50%" MARK: スマホだとなぜか動的に計算されない・
               width="100vw"
               sx={{
                 overflow: "hidden",
@@ -158,7 +159,8 @@ export default function SearchPage() {
             <Stack
               gap={1}
               direction="column"
-              height="50%"
+              height="30dvh"
+              // height="50%" MARK: スマホだとなぜか動的に計算されない・
               width="100vw"
               sx={{
                 overflow: "hidden",
