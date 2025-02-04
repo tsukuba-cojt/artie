@@ -1,6 +1,6 @@
+import { getAccessToken } from "@/lib/getAccessToken";
 import { NextResponse } from "next/server";
 
-const GOOGLE_CLOUD_ACCESS_TOKEN = process.env.GOOGLE_CLOUD_ACCESS_TOKEN;
 const PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT_ID;
 const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || "us-central1";
 const ENDPOINT_ID = process.env.GOOGLE_CLOUD_MODEL_ID;
@@ -19,10 +19,12 @@ export async function POST(req: Request) {
       );
     }
 
+    const accessToken = await getAccessToken();
+
     const response = await fetch(ENDPOINT, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${GOOGLE_CLOUD_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -57,7 +59,6 @@ export async function POST(req: Request) {
 
     const maxConfidence = predictions.confidences[maxConfidenceIndex];
     const maxId = predictions.ids[maxConfidenceIndex];
-    console.log(predictions);
 
     if (maxConfidence < 0.8) {
       return NextResponse.json(
