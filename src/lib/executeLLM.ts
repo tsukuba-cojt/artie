@@ -1,20 +1,9 @@
+import { LLMMessage, LLMRole } from "@/types/LLMType";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
-export enum LLMRole {
-  SYSTEM = "system",
-  USER = "user",
-  ASSISTANT = "assistant",
-}
-
-export type LLMMessage = {
-  role: LLMRole;
-  content: string;
-  created_at?: string;
-};
 
 type LLMInput = {
   systemMessage: string;
@@ -42,7 +31,7 @@ export const executeLLM = async ({
           (msg): LLMMessage => ({
             role: msg.role,
             content: msg.content,
-          })
+          }),
         ),
       ];
 

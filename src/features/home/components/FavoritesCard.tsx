@@ -33,7 +33,7 @@ const FavoritesCard: React.FC = () => {
             Work: {
               imageUrl: string;
             };
-          }) => item.Work.imageUrl
+          }) => item.Work.imageUrl,
         );
         setImages(imageUrls);
       } catch {

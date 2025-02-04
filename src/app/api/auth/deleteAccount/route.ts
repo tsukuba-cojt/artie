@@ -12,7 +12,7 @@ export async function DELETE(_request: Request) {
     if (userError || !userData.user) {
       return NextResponse.json(
         { error: "ユーザー情報の取得に失敗しました。" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -27,7 +27,7 @@ export async function DELETE(_request: Request) {
     if (dbError) {
       return NextResponse.json(
         { error: "ユーザーデータの削除に失敗しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -41,7 +41,7 @@ export async function DELETE(_request: Request) {
     if (authError) {
       return NextResponse.json(
         { error: "認証情報の削除に失敗しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -50,7 +50,7 @@ export async function DELETE(_request: Request) {
     console.error("アカウント削除中のエラー:", error);
     return NextResponse.json(
       { error: "予期しないエラーが発生しました。" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

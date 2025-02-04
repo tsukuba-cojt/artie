@@ -25,7 +25,7 @@ const FavoritesCard: React.FC = () => {
       window.location.href = "/";
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "予期しないエラーが発生しました。"
+        err instanceof Error ? err.message : "予期しないエラーが発生しました。",
       );
     } finally {
       setIsLoading(false);

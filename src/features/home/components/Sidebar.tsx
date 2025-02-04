@@ -80,7 +80,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             color={theme.palette.accent.main}
           />
         </MenuItem>
-        <MenuItem id="profilePageLinkButton">
+        <MenuItem
+          id="profilePageLinkButton"
+          onClick={() => router.push(`/auth/updateProfile/`)}
+        >
           <span>プロフィール</span>
           <Icon
             icon="mdi:chevron-right"

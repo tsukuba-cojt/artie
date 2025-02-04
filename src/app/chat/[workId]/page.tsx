@@ -1,13 +1,13 @@
 "use client";
 
 import { Box, Stack, Typography, CircularProgress } from "@mui/material";
-import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ChatInput from "@/features/chat/components/Input";
 import SpeechBubble from "@/features/base/components/SpeechBubble";
 import Header from "@/features/base/components/header";
 import ClickableSpeechBubble from "@/features/chat/components/SuggestionButton";
-import { LLMMessage, LLMRole } from "@/lib/executeLLM";
+import { LLMMessage, LLMRole } from "@/types/LLMType";
 
 const ChatPage = () => {
   const { workId } = useParams();
@@ -26,7 +26,6 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (!workIdStr) {
-      console.error("workId is undefined!");
       setError("Invalid work ID.");
       return;
     }
@@ -51,20 +50,12 @@ const ChatPage = () => {
           setError("作品情報の取得に失敗しました");
         }
 
-        if (!historyRes.ok || !Array.isArray(historyData.history)) {
+        if (!historyRes.ok || !Array.isArray(historyData.data)) {
           setError("チャット履歴の取得に失敗しました");
           return;
         }
 
-        setMessages(
-          historyData.history.map(
-            (msg: { role: string; message: string; createdAt: string }) => ({
-              role: msg.role as LLMRole,
-              message: msg.message,
-              createdAt: msg.createdAt,
-            })
-          )
-        );
+        setMessages(historyData.data);
       } catch {
         setError("予期せぬエラーが発生しました");
       } finally {
@@ -94,13 +85,17 @@ const ChatPage = () => {
         created_at: new Date().toISOString(),
       };
 
+      // TODO: もっと綺麗に書く。messages.lenght === 1なら、artieちゃんからの初回メッセージを履歴に含める必要があるから、追加してる感じ。
+      const newMessages =
+        messages.length === 1 ? [{ ...messages[0] }, newMessage] : [newMessage];
+
       const res = await fetch(`/api/chat/${workIdStr}/llm`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          newMessages: [newMessage],
+          newMessages: newMessages,
           history: messages.map((msg) => ({
             role: msg.role,
             content: msg.content,
@@ -129,6 +124,68 @@ const ChatPage = () => {
       setSending(false);
     }
   };
+
+  const searchParams = useSearchParams();
+  const queryMessage = searchParams.get("message");
+
+  const [hasFetched, setHasFetched] = useState<boolean>(false);
+
+  // TODO: 二回発火される問題の根本的な解決。現在は対症療法的な解決になってる。純粋関数になっていないことが原因だと思われる。
+  const fetchInitialMessage = useCallback(async () => {
+    if (!queryMessage || hasFetched) return;
+    setHasFetched(true);
+
+    const newMessages: LLMMessage[] = [
+      {
+        role: LLMRole.ASSISTANT,
+        content: queryMessage,
+        created_at: new Date().toISOString(),
+      },
+      {
+        role: LLMRole.USER,
+        content: "もっと教えて",
+        created_at: new Date().toISOString(),
+      },
+    ];
+
+    try {
+      const res = await fetch(`/api/chat/${workIdStr}/llm`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newMessages: newMessages,
+          history: messages.map((msg) => ({
+            role: msg.role,
+            content: msg.content,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessages((prev) => [
+          ...prev,
+          ...newMessages,
+          {
+            role: LLMRole.ASSISTANT,
+            content: data.reply,
+            created_at: new Date().toISOString(),
+          },
+        ]);
+      } else {
+        setError(data.reply || "artieちゃんの調子が悪いようです...");
+      }
+    } catch {
+      setError("artieちゃんの調子が悪いようです...");
+    }
+  }, [queryMessage, workIdStr, hasFetched, messages]);
+
+  useEffect(() => {
+    fetchInitialMessage();
+  }, [fetchInitialMessage]);
 
   return (
     <Stack
@@ -249,7 +306,7 @@ const ChatPage = () => {
               content={text}
               onSend={handleSendMessage}
             />
-          )
+          ),
         )}
       </Box>
 

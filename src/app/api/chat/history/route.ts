@@ -10,7 +10,7 @@ export async function GET(_req: NextRequest) {
     if (userError || !userData.user) {
       return NextResponse.json(
         { error: "ユーザー情報の取得に失敗しました。" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -29,17 +29,17 @@ export async function GET(_req: NextRequest) {
             title,
             imageUrl
           )
-        `
+        `,
       )
       .eq("userId", userId)
-      .eq("sender", "AI")
+      .eq("sender", "assistant")
       .order("workId", { ascending: true })
       .order("createdAt", { ascending: false });
 
     if (error) {
       return NextResponse.json(
         { error: "会話履歴の取得に失敗しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -53,7 +53,7 @@ export async function GET(_req: NextRequest) {
     }
 
     const result = Array.from(uniqueConversations.values()).sort((a, b) =>
-      b.createdAt.localeCompare(a.createdAt)
+      b.createdAt.localeCompare(a.createdAt),
     );
 
     return NextResponse.json({
@@ -63,12 +63,12 @@ export async function GET(_req: NextRequest) {
     if (error instanceof Error) {
       return NextResponse.json(
         { error: `エラーが発生しました: ${error.message}` },
-        { status: 500 }
+        { status: 500 },
       );
     }
     return NextResponse.json(
       { error: "未知のエラーが発生しました。" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

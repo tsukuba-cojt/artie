@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
+import { LLMMessage, LLMRole } from "@/types/LLMType";
 import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: Promise<{ workId: string }> }
+  { params }: { params: Promise<{ workId: string }> },
 ) {
   try {
     const { workId } = await params;
@@ -14,7 +15,7 @@ export async function GET(
     if (userError || !userData.user) {
       return NextResponse.json(
         { error: "ユーザー情報の取得に失敗しました。" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -30,17 +31,17 @@ export async function GET(
     if (fetchError) {
       return NextResponse.json(
         { error: "会話履歴の取得中にエラーが発生しました。" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
-    let message: { sender: string; message: string; createdAt: string }[];
+    let message: LLMMessage[];
 
     if (conversations && conversations.length > 0) {
       message = conversations.map((conv) => ({
-        sender: conv.sender === "USER" ? "user" : "assistant",
-        message: conv.message,
-        createdAt: conv.createdAt,
+        role: conv.sender,
+        content: conv.message,
+        created_at: conv.createdAt,
       }));
     } else {
       const { data: workData, error: workError } = await supabase
@@ -52,16 +53,16 @@ export async function GET(
       if (workError) {
         return NextResponse.json(
           { error: "作品情報の取得中にエラーが発生しました。" },
-          { status: 500 }
+          { status: 500 },
         );
       }
 
       if (workData?.firstComment) {
         message = [
           {
-            sender: "AI",
-            message: workData.firstComment,
-            createdAt: new Date().toISOString(),
+            role: LLMRole.ASSISTANT,
+            content: workData.firstComment,
+            created_at: new Date().toISOString(),
           },
         ];
       } else {
@@ -69,7 +70,7 @@ export async function GET(
       }
     }
 
-    return NextResponse.json({ message });
+    return NextResponse.json({ data: message });
   } catch (error) {
     const errorMessage =
       error instanceof Error
