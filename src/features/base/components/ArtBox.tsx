@@ -42,13 +42,12 @@ const ArtBox: React.FC<ArtBoxProps> = ({
       }}
     >
       {/* 画像 */}
-      <Box
-        component="img"
-        src={imageUrl ?? null}
+      <img
+        src={imageUrl ?? ""}
         alt={title}
-        sx={{
-          height: "100%",
-          width: "100%",
+        style={{
+          width: direction === "column" ? "100%" : "auto",
+          height: direction === "column" ? "auto" : "100%",
           objectFit: "cover",
           display: "block",
           maxWidth: "none",
@@ -56,7 +55,6 @@ const ArtBox: React.FC<ArtBoxProps> = ({
           minWidth: 0,
         }}
       />
-
       {/* タイトルと詳細ボタン */}
       <Stack
         direction="row"
