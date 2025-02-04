@@ -38,6 +38,7 @@ const ArtBox: React.FC<ArtBoxProps> = ({
         height: direction === "column" ? "auto" : "100%",
         overflow: "hidden",
         flexShrink: 0,
+        minWidth: 0,
       }}
     >
       {/* 画像 */}
@@ -48,8 +49,10 @@ const ArtBox: React.FC<ArtBoxProps> = ({
         sx={{
           width: "100%",
           height: "100%",
-          objectFit: "contain",
+          objectFit: "cover",
           display: "block",
+          flexShrink: 0,
+          minWidth: 0,
         }}
       />
 
