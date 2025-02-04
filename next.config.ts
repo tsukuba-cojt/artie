@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ["www.google.com"], // 必要なホスト名を追加
+    domains: ["www.google.com", "czitzyatrihzzwvcfjul.supabase.co"], // 必要なホスト名を追加
   },
 };
 
