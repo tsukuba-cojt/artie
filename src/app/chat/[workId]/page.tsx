@@ -9,13 +9,20 @@ import Header from "@/features/base/components/header";
 import ClickableSpeechBubble from "@/features/chat/components/SuggestionButton";
 import { LLMMessage, LLMRole } from "@/types/LLMType";
 
+interface WorkData {
+  imageUrl: string;
+  title: string;
+  suggestComments: string[];
+}
+
 const ChatPage = () => {
   const { workId } = useParams();
   const workIdStr = workId as string;
 
-  const [workData, setWorkData] = useState({
+  const [workData, setWorkData] = useState<WorkData>({
     imageUrl: "",
     title: "",
+    suggestComments: [],
   });
 
   const [messages, setMessages] = useState<LLMMessage[]>([]);
@@ -45,6 +52,7 @@ const ChatPage = () => {
           setWorkData({
             imageUrl: workData.data?.imageUrl || "",
             title: workData.data?.title || "Unknown Title",
+            suggestComments: workData.data?.suggestComments || [],
           });
         } else {
           setError("作品情報の取得に失敗しました");
@@ -299,15 +307,13 @@ const ChatPage = () => {
           gap: 2,
         }}
       >
-        {["この作品の豆知識", "誰が描いたの", "いつ書かれたの", "君は誰？"].map(
-          (text) => (
-            <ClickableSpeechBubble
-              key={text}
-              content={text}
-              onSend={handleSendMessage}
-            />
-          ),
-        )}
+        {workData.suggestComments.map((text) => (
+          <ClickableSpeechBubble
+            key={text}
+            content={text}
+            onSend={handleSendMessage}
+          />
+        ))}
       </Box>
 
       <Box

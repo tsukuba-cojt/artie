@@ -220,7 +220,7 @@ export default function SearchPage() {
             </Button>
           </Box>
         ) : searchResults.length > 0 ? (
-          <Stack gap={1} direction="column">
+          <Stack gap={1} direction="column" p={2} mb={113}>
             <Typography variant="h6">
               <strong>検索結果</strong>
             </Typography>
@@ -236,7 +236,7 @@ export default function SearchPage() {
             </Stack>
           </Stack>
         ) : (
-          <Stack gap={1} direction="column">
+          <Stack gap={1} direction="column" p={2} mb={113}>
             <Typography variant="h6">
               <strong>検索結果</strong>
             </Typography>

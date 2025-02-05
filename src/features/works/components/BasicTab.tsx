@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Box, Typography, CircularProgress, Button } from "@mui/material";
 import { useParams } from "next/navigation";
 import useUserSettings from "@/features/auth/hooks/useUserSettings";
@@ -10,10 +10,13 @@ const BasicTab = () => {
   const { settings } = useUserSettings();
   const [description, setDescription] = useState<string | null>(null);
   const [descriptionAudioUrl, setDescriptionAudioUrl] = useState<string | null>(
-    null,
+    null
   );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Audio インスタンスを保持する ref
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const fetchWork = useCallback(async () => {
     setLoading(true);
@@ -46,14 +49,26 @@ const BasicTab = () => {
     }
   }, [id, fetchWork]);
 
-  // 音声ガイドの自動再生を制御
+  // 音声ガイドの自動再生・停止を制御
   useEffect(() => {
     if (settings.autoPlayAudioGuide && descriptionAudioUrl) {
+      // もしすでに再生中の音声があれば停止してから新しい音声を再生
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
       const audio = new Audio(descriptionAudioUrl);
-      console.log(descriptionAudioUrl);
+      audioRef.current = audio;
       audio.play().catch((error) => {
         console.error("音声の再生に失敗しました。", error);
       });
+    } else {
+      // 自動再生がオフになった場合、再生中の音声を停止する
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+      }
     }
   }, [settings.autoPlayAudioGuide, descriptionAudioUrl]);
 
