@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import Header from "@/features/base/components/header";
 
 export default function Home() {
