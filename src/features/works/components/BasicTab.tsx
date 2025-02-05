@@ -10,7 +10,7 @@ const BasicTab = () => {
   const { settings } = useUserSettings();
   const [description, setDescription] = useState<string | null>(null);
   const [descriptionAudioUrl, setDescriptionAudioUrl] = useState<string | null>(
-    null
+    null,
   );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
