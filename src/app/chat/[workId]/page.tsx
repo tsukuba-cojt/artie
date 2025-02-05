@@ -84,16 +84,15 @@ const ChatPage = () => {
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
 
+    const newMessage: LLMMessage = {
+      role: LLMRole.USER,
+      content: message,
+      created_at: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, newMessage]);
     setSending(true);
 
     try {
-      const newMessage: LLMMessage = {
-        role: LLMRole.USER,
-        content: message,
-        created_at: new Date().toISOString(),
-      };
-
-      // TODO: もっと綺麗に書く。messages.lenght === 1なら、artieちゃんからの初回メッセージを履歴に含める必要があるから、追加してる感じ。
       const newMessages =
         messages.length === 1 ? [{ ...messages[0] }, newMessage] : [newMessage];
 
@@ -116,7 +115,6 @@ const ChatPage = () => {
       if (res.ok) {
         setMessages((prev) => [
           ...prev,
-          newMessage,
           {
             role: LLMRole.ASSISTANT,
             content: data.reply,
@@ -138,7 +136,6 @@ const ChatPage = () => {
 
   const [hasFetched, setHasFetched] = useState<boolean>(false);
 
-  // TODO: 二回発火される問題の根本的な解決。現在は対症療法的な解決になってる。純粋関数になっていないことが原因だと思われる。
   const fetchInitialMessage = useCallback(async () => {
     if (!queryMessage || hasFetched) return;
     setHasFetched(true);
@@ -281,12 +278,19 @@ const ChatPage = () => {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: 2,
+                  alignItems: "flex-end",
+                  gap: 2,
+                  marginBottom: "10px",
+                  justifyContent: "flex-start",
                 }}
               >
-                <CircularProgress sx={{ color: "accent.main" }} />
+                <Box
+                  component="img"
+                  src="/images/profile_artie.png"
+                  alt="Profile Image"
+                  sx={{ width: 50, height: 50, borderRadius: "50%" }}
+                />
+                <SpeechBubble content="考え中…" isRight={false} />
               </Box>
             )}
           </>
