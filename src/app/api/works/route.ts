@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
         `
     title,
     imageUrl,
+    suggestComments,
     Author (
       name
     )
