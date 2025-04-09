@@ -1,24 +1,24 @@
 const popularWorks = [
   {
-    id: "8453216093522100224",
-    title: "Olympia",
+    id: "1643814688623951872",
+    title: "海の幸",
     imageUrl:
-      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/8453216093522100224.jpg",
+      "https://hanaumikaidou.com/wp-content/uploads/2024/10/uminosachi2.jpg",
   },
   {
-    id: "9183925133062963200",
-    title: "Mona Lisa",
+    id: "490893184017104896",
+    title: "すわるジョルジェット・シャルパンティエ嬢",
     imageUrl:
-      "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/9183925133062963200.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs9rSs31arq3xFMmI0VPYeN7nt7sGdDzt5yQ&s",
   },
   {
-    id: "7095943755823316992",
+    id: "2796736193230798848",
     title: "The Birth of Venus",
     imageUrl:
       "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/7095943755823316992.jpg",
   },
   {
-    id: "3006675294170906624",
+    id: "8849574092416745472",
     title: "Samson and Delilah",
     imageUrl:
       "https://czitzyatrihzzwvcfjul.supabase.co/storage/v1/object/public/work_images/images/3006675294170906624.jpg",
